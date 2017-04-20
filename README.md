@@ -1,5 +1,37 @@
 # activate-power-mode-background-music Beta
 
-## Listen your favorite music while you are on Combo Mode.
+## This is an extension package for activate-power-mode that allow you to listen your favorite music while you are on Combo Mode.
 
+## Requirements
 
+Need Activate-Power-Mode package installed
+
+## Usage
+
+- Activate with <kbd>Ctrl</kbd>-<kbd>Alt</kbd>-<kbd>M</kbd> or through the command panel with `Activate Power Mode Background Music: Toggle`. Use the command again to deactivate.
+
+- or activate by going settings/packages/activate-power-mode-background-music/enable
+
+**IMPORTANT: When `Background Music` is enabled, music won't play until you reach the activation threshold on activate-power-mode settings.**
+
+**For a video of how to use and Configure activate-power-mode-background-music, check out [here](https://www.youtube.com/channel/UCvqT1eT3VYOTPYLetNJ-PIQ). Videos not yet**
+
+## Install
+
+With the atom package manager:
+```bash
+apm install activate-power-mode-background-music
+```
+Or Settings ➔ Packages ➔ Search for `activate-power-mode-background-music`
+
+## Settings
+
+### Play Background Music
+* **Enable/Disable**
+* Path to Audio
+* Volume
+
+### Play Background Music Action
+* **none/repit/change, endMusic/endStreak/nextLevel/duringStreak, streak/time, lapse**
+
+**The last 2 parameters are only used on duringStreak**
