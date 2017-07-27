@@ -1,0 +1,23 @@
+{
+  "name": "activate-power-mode-background-music",
+  "main": "./lib/activate-power-mode-background-music",
+  "version": "0.0.1",
+  "description": "Play backgroun music while you are in combo mode.",
+  "keywords": [
+  ],
+  "repository": "https://github.com/Jerajo/activate-power-mode-background-music",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "package-deps": ["activate-power-mode"]
+  },
+  "consumedServices": {
+     "activate-power-mode": {
+       "versions": {
+         "^1.0.0": "consumeActivatePowerModeServiceV1"
+       }
+     }
+   }
+}

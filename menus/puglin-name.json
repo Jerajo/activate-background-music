@@ -1,0 +1,26 @@
+{
+  "context-menu": {
+    "atom-text-editor": [
+      {
+        "label": "Toggle puglin-name",
+        "command": "puglin-name:toggle"
+      }
+    ]
+  },
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "puglin-name",
+          "submenu": [
+            {
+              "label": "Toggle",
+              "command": "puglin-name:toggle"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
