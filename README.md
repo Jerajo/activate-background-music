@@ -27,11 +27,26 @@ Or Settings ➔ Packages ➔ Search for `activate-background-music`
 ## Settings
 
 ### Play Background Music
+
 * **Enable/Disable**
 * Path to Audio
 * Volume
 
 ### Play Background Music Action
-* **none/repit/change, endMusic/endStreak/nextLevel/duringStreak, streak/time, lapse**
+
+* **Actions Execution**
+* none      
+* repit     
+* change
+
+* **Execution**
+* endMusic
+* duringStreak
+* endStreak
+* nextLevel 
+
+* **Lapse Tipe**
+* streak
+* time
 
 **The last 2 parameters are only used on duringStreak**
