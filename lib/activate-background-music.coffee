@@ -1,3 +1,5 @@
+{CompositeDisposable} = require "atom"
+
 configSchema = require "./config-schema"
 musiControler = require "./music-controler"
 playIntroAudio = require "./play-intro"

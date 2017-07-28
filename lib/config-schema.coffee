@@ -4,6 +4,7 @@ module.exports =
     description: "Toggle on start."
     type: "boolean"
     default: true
+    order: 1
 
   playIntroAudio:
     type: "object"
@@ -41,6 +42,7 @@ module.exports =
         minimum: 0.0
         maximum: 1.0
         order: 4
+      order: 2
 
   playBackgroundMusic:
     type: "object"
@@ -56,7 +58,7 @@ module.exports =
         title: "Background Music - Path to Audio"
         description: "Path to Music Tracks played in combo Mode."
         type: "string"
-        default: '../sounds/backgroundmusics/'
+        default: '../sounds/'
         order: 2
 
       musicVolume:

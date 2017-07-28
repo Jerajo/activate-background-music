@@ -12,4 +12,4 @@ module.exports =
     audio.play()
 
   getConfig: (config) ->
-    atom.config.get "activate-power-mode.playIntroAudio.#{config}"
+    atom.config.get "activate-background-music.playIntroAudio.#{config}"

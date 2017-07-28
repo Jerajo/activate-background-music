@@ -2,8 +2,8 @@
   "context-menu": {
     "atom-text-editor": [
       {
-        "label": "Toggle puglin-name",
-        "command": "puglin-name:toggle"
+        "label": "Toggle activate-background-music",
+        "command": "activate-background-music:toggle"
       }
     ]
   },
@@ -12,11 +12,11 @@
       "label": "Packages",
       "submenu": [
         {
-          "label": "puglin-name",
+          "label": "activate-background-music",
           "submenu": [
             {
               "label": "Toggle",
-              "command": "puglin-name:toggle"
+              "command": "activate-background-music:toggle"
             }
           ]
         }

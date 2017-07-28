@@ -1,6 +1,6 @@
 {
 	"name": "activate-background-music",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Play backgroun music while you are in combo mode.",
 	"keywords": [
 		"activate",
@@ -11,7 +11,7 @@
 	"author": "Jesse R. Jose <jessejose@outlook.es> (https://github.com/Jerajo)",
 	"main": "./lib/activate-background-music",
 	"repository": {
-		"url": "https://github.com/Jerajo/activate-power-mode-background-music"
+		"url": "https://github.com/Jerajo/activate-background-music"
 	},
 	"dependencies": {
 		"package-deps": "activate-power-mode",

@@ -16,8 +16,8 @@ module.exports =
 
   setup: ->
     @musicPathObserver?.dispose()
-    @musicPathObserver = atom.config.observe 'activate-power-mode.playBackgroundMusic.musicPath', (value) =>
-      if value is "../audioclips/backgroundmusics/"
+    @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (value) =>
+      if value is "../sounds/"
         @pathtoMusic = path.join(__dirname, value)
       else
         @pathtoMusic = value
@@ -27,12 +27,12 @@ module.exports =
       @music.volume = @getConfig "musicVolume"
 
     @musicEnabledObserver?.dispose()
-    @musicEnabledObserver = atom.config.observe 'activate-power-mode.playBackgroundMusic.enabled', (enabled) =>
+    @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (enabled) =>
       if not enabled
         @destroy()
 
     @actionObserver?.dispose()
-    @actionObserver = atom.config.observe 'activate-power-mode.playBackgroundMusic.actions.command', (value) =>
+    @actionObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.actions.command', (value) =>
       @action = value[0]
       @execution = value[1]
       if @execution is "duringStreak"
@@ -114,10 +114,11 @@ module.exports =
     @isPlaying = false
     @music.pause()
 
-  stop: ->
+  stop: -> #arreglar error se ejuta primero
     @isPlaying = false
-    @music.pause()
-    @music.currentTime = 0
+    if @music != null
+      @music.pause()
+      @music.currentTime = 0
 
   autoPlay: ->
     if @execution is "endMusic"
@@ -165,4 +166,4 @@ module.exports =
     @pause()
 
   getConfig: (config) ->
-    atom.config.get "activate-power-mode.playBackgroundMusic.#{config}"
+    atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
