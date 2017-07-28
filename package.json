@@ -1,23 +1,31 @@
 {
-  "name": "activate-power-mode-background-music",
-  "main": "./lib/activate-power-mode-background-music",
-  "version": "0.0.1",
-  "description": "Play backgroun music while you are in combo mode.",
-  "keywords": [
-  ],
-  "repository": "https://github.com/Jerajo/activate-power-mode-background-music",
-  "license": "MIT",
-  "engines": {
-    "atom": ">=1.0.0 <2.0.0"
-  },
-  "dependencies": {
-    "package-deps": ["activate-power-mode"]
-  },
-  "consumedServices": {
-     "activate-power-mode": {
-       "versions": {
-         "^1.0.0": "consumeActivatePowerModeServiceV1"
-       }
-     }
-   }
+	"name": "activate-power-mode-background-music",
+	"version": "0.0.1",
+	"description": "Play backgroun music while you are in combo mode.",
+	"keywords": [
+		"activate",
+		"power",
+		"mode"
+	],
+	"license": "MIT",
+  "author": "Jesse R. Jose <jessejose@outlook.es> (https://github.com/Jerajo)",
+	"main": "./lib/activate-power-mode-background-music",
+	"repository": {
+		"url": "https://github.com/Jerajo/activate-power-mode-background-music"
+	},
+	"dependencies": {
+		"package-deps": "activate-power-mode",
+		"lodash.debounce": "^4.0.8",
+		"lodash.throttle": "^4.0.1"
+	},
+	"engines": {
+		"atom": ">=1.0.0 <2.0.0"
+	},
+	"consumedServices": {
+		"activate-power-mode": {
+			"versions": {
+				"^1.0.0": "consumeActivatePowerModeServiceV1"
+			}
+		}
+	}
 }

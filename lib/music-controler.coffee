@@ -3,41 +3,28 @@ musicPlayer = require "./music-player"
 
 module.exports =
 
+  api: null
   musicPlayer: musicPlayer
+  isCombomode: false
 
   # When plugin is enabled, you get the api object here.
   enable: (api) ->
-    @api = api;
+    @api = api
 
-
-  # When plugin is disabled.
   disable: ->
+    @musicPlayer.destroy()
+  #onChangePane: (editor, editorElement) ->
 
-  # When the pane is changed. If the editor is null means
-  # the new active pane is not a text editor.
-  onChangePane: (editor, editorElement) ->
-
-  # When a new cursor is added.
-  onNewCursor: (cursor) ->
-
-  # When the user writes something. You get the cursor,
-  # the screen position of the input, an input object
-  # and data processed by the flow.
   onInput: (cursor, screenPosition, input, data) ->
+    @musicPlayer.play @api.getCombo()
 
-  # When the combo streak starts.
-  onComboStartStreak: () ->
+  #onComboStartStreak: () ->
 
-  # When the combo level changes.
-  onComboLevelChange: (newLvl, oldLvl) ->
+  #onComboLevelChange: (newLvl, oldLvl) ->
 
-  # When the combo streak ends.
   onComboEndStreak: () ->
-    @musicPlayer.mostrarMensaje("onComboEndStreak")
+    @musicPlayer.stop()
 
+  #onComboExclamation: (text) ->
 
-  # When the combo shows an exclamation.
-  onComboExclamation: (text) ->
-
-  # When the combo reach a new maximum.
-  onComboMaxStreak: (maxStreak) ->
+  #onComboMaxStreak: (maxStreak) ->
