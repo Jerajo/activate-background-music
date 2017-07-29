@@ -1,13 +1,15 @@
 module.exports =
   autoToggle:
+    order: 1
     title: "Auto Toggle"
     description: "Toggle on start."
     type: "boolean"
     default: true
-    order: 1
+
 
   playIntroAudio:
     type: "object"
+    order: 2
     properties:
       enabled:
         title: "Play Intro Audio - Enabled"
@@ -42,10 +44,10 @@ module.exports =
         minimum: 0.0
         maximum: 1.0
         order: 4
-      order: 2
 
   playBackgroundMusic:
     type: "object"
+    order: 3
     properties:
       enabled:
         title: "Background Music - Enabled"
@@ -70,16 +72,92 @@ module.exports =
         maximum: 1.0
         order: 3
 
-      actions:
+  actions:
+    order: 4
+    title: "Music Player - Actions"
+    description: "Actions executed with the music player"
+    type: "object"
+    properties:
+      duringStreak:
+        order: 1
         type: "object"
         properties:
-          command:
-            title: "Music Player - Action"
-            description: 'Syntax "action, when, lapseType, lapse".\n
-            action: repeat, change, none\n
-            execution: duringStreak, endStreak, endMusic\n
-            lapseType: streak, time (This value is used only if execution is duringStreak)\n
-            lapse: Number Value (if lapseType is time, lapse will be in seconds) Min:10 Max:100\n
-            Note: the lapsetype and lapse values is only used in duringStreak.'
-            type: "array"
-            default: ['change', 'duringStreak', 'streak', '100']
+          action:
+            title: "Music Player - Action During Streak"
+            description: "Action executed during streak."
+            type: "string"
+            default: 'change'
+            enum: [
+              {value: 'change', description: 'Change Music'}
+              {value: 'repeat', description: 'Repeat Music'}
+              {value: 'none', description: 'None'}
+            ]
+            order: 1
+
+          typeLapse:
+            title: "Music Player - Type of Lapse"
+            description: "Type of lapse used for the action during streak."
+            type: "string"
+            default: 'streak'
+            enum: [
+              {value: 'streak', description: 'Streaks'}
+              {value: 'time', description: 'Seconds'}
+            ]
+            order: 2
+
+          lapse:
+            title: "Music Player - Lapse"
+            description: "Lapse for acion execution on streaks or seconds."
+            type: "number"
+            default: 100
+            minimum: 10
+            maximum: 100000
+            order: 3
+
+      endStreak:
+        order: 2
+        type: "object"
+        properties:
+          action:
+            title: "Music Player - Action On Streak End"
+            description: "Action executed when the combo streak ends."
+            type: "string"
+            default: 'pause'
+            enum: [
+              {value: 'pause', description: 'Pasue Music'}
+              {value: 'change', description: 'Change Music'}
+              {value: 'stop', description: 'Repeat Music'}
+              {value: 'none', description: 'None'}
+            ]
+
+      nextLevel:
+        order: 3
+        type: "object"
+        properties:
+          action:
+            title: "Music Player - Action On Next Level"
+            description: "Action executed when the combo level changes."
+            type: "string"
+            default: 'none'
+            enum: [
+              {value: 'pause', description: 'Pasue Music'}
+              {value: 'next', description: 'Change Music'}
+              {value: 'repeat', description: 'Repeat Music'}
+              {value: 'none', description: 'None'}
+            ]
+
+      endMusic:
+        order: 4
+        type: "object"
+        properties:
+          action:
+            title: "Music Player - Action On Music End"
+            description: "Action executed when music ends."
+            type: "string"
+            default: 'pause'
+            enum: [
+              {value: 'pause', description: 'Pasue Music'}
+              {value: 'change', description: 'Change Music'}
+              {value: 'repeat', description: 'Repeat Music'}
+              {value: 'none', description: 'None'}
+            ]
