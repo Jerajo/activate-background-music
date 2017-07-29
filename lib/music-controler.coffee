@@ -1,5 +1,4 @@
-
-musicPlayer = require "./music-player"
+musicPlayer = require "./music-player3"
 
 module.exports =
 
@@ -7,23 +6,26 @@ module.exports =
   musicPlayer: musicPlayer
   isCombomode: false
 
-  # When plugin is enabled, you get the api object here.
   enable: (api) ->
     @api = api
+    @musicPlayer.setup()
 
   disable: ->
     @musicPlayer.destroy()
+
   #onChangePane: (editor, editorElement) ->
 
-  onInput: (cursor, screenPosition, input, data) ->
+  #onInput: (cursor, screenPosition, input, data) ->
+    #@musicPlayer.play @api.getCombo()
+
+  onComboStartStreak: () ->
     @musicPlayer.play @api.getCombo()
-
-  #onComboStartStreak: () ->
-
-  #onComboLevelChange: (newLvl, oldLvl) ->
+    
+  onComboLevelChange: (newLvl, oldLvl) ->
+    @musicPlayer.actionDuringStreak
 
   onComboEndStreak: () ->
-    @musicPlayer.stop()
+    @musicPlayer.actionEndStreak()
 
   #onComboExclamation: (text) ->
 
