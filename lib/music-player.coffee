@@ -1,69 +1,58 @@
+configReader = require "./config-reader"
 path = require "path"
 fs = require "fs"
 debounce = require "lodash.debounce"
 
 module.exports =
+  musicCong: configReader
   music: null
   isPlayin: false
   isSetup: false
-  pathtoMusic: ""
   musicFiles: null
   currentMusic: 0
-  action: ""
-  execution: ""
-  actionLapseType: ""
-  actionLapse: 0
+  typeLapse: ""
+  timeLapse: 0
 
   setup: ->
-    @musicPathObserver?.dispose()
-    @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (value) =>
-      if value is "../sounds/"
-        @pathtoMusic = path.join(__dirname, value)
-      else
-        @pathtoMusic = value
-
-      @musicFiles = @getAudioFiles()
-      @music = new Audio(@pathtoMusic + @musicFiles[0])
-      @music.volume = @getConfig "musicVolume"
-
     @musicEnabledObserver?.dispose()
-    @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (enabled) =>
-      if not enabled
+    @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (Enabled) =>
+      if not Enabled and @isSetup
         @destroy()
-
-    @actionObserver?.dispose()
-    @actionObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.actions.command', (value) =>
-      @action = value[0]
-      @execution = value[1]
-      if @execution is "duringStreak"
-        @actionLapseType = value[2]
-        lapseValue = value.map(Number)
-        if(lapseValue[3] >= 10) and (lapseValue[3] <= 100)
-          @actionLapse = lapseValue[3]
-        else
-          @actionLapse = 10 if(lapseValue[3] < 10)
-          @actionLapse = 100 if(lapseValue[3] > 100)
-        if @actionLapseType is "time"
-          @timeLapse = @actionLapse * 1000
-          @debouncedActionDuringStreak?.cancel()
-          @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
-          @debouncedActionDuringStreakDuringStreak()
       else
-        @debouncedActionDuringStreak?.cancel()
-        @debouncedActionDuringStreak = null
-        @actionLapseType = ""
-        @actionLapse = 0
-        @music.onended = =>
-          @actionDuringStreak()
+        @musicCong.setup()
 
-    @isSetup = true
+        @musicPathObserver?.dispose()
+        @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (newValue, oldValue) =>
+          @musicFiles = @getAudioFiles()
+          @music = new Audio(@musicCong.pathtoMusic + @musicFiles[0])
+          @music.volume = @getConfig "musicVolume"
+
+        @lapseTypeObserver?.dispose()
+        @lapseTypeObserver = atom.config.observe 'activate-background-music.actions.duringStreak.typeLapse', (newValue, oldValue) =>
+          if @musicCong.typeLapse is "time"
+            @timeLapse = @musicCong.lapse * 1000
+            @debouncedActionDuringStreak?.cancel()
+            @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
+          else
+            @debouncedActionDuringStreak?.cancel()
+            @debouncedActionDuringStreak = null
+
+        @actionEndMusicObserver?.dispose()
+        @actionEndMusicObserver = atom.config.observe 'activate-background-music.actions.endMusic.action', (newValue, oldValue) =>
+          if @musicCong.actionEndMusic != "none"
+            @music.onended = =>
+              @actionDuringStreak(@musicCong.actionEndMusic)
+          else
+            @music.onended = null
+
+        @isSetup = true
 
   getAudioFiles: ->
-    allFiles = fs.readdirSync(@pathtoMusic.toString())
+    allFiles = fs.readdirSync(@musicCong.pathtoMusic)
     file = 0
     while(allFiles[file])
       fileName = allFiles[file++]
-      fileExtencion = fileName.split('.').pop();
+      fileExtencion = fileName.split('.').pop()
       continue if(fileExtencion is "mp3") or (fileExtencion is "MP3")
       continue if(fileExtencion is "wav") or (fileExtencion is "WAV")
       continue if(fileExtencion is "3gp") or (fileExtencion is "3GP")
@@ -75,11 +64,12 @@ module.exports =
     return allFiles
 
   destroy: ->
-    if(@music != null) and (@isSetup is true)
+    console.log "es imbocado: destroy"
+    @musicCong.destroy()
+    if @music != null and @isSetup is true
       @stop()
       @musicPathObserver?.dispose()
-      @musicEnabledObserver?.dispose()
-      @actionObserver?.dispose()
+      @lapseTypeObserver?.dispose()
       @debouncedActionDuringStreak?.cancel()
       @debouncedActionDuringStreak = null
       @isSetup = false
@@ -89,81 +79,105 @@ module.exports =
       currentMusic = 0
 
   play: (streak) ->
-    @setup() if !@isSetup
-    if @execution is "duringStreak"
-      @actionDuringStreak(streak)
+    #@setup() if not @isSetup
+    if @musicCong.actionDuringStreak != "none" and @musicCong.typeLapse is "time"
+      console.log "es imbocado: actionDuringStreak"
+      @actionDuringStreak(@musicCong.actionDuringStreak, streak)
 
     @isPlaying = false if (@music.paused)
     return null if @isPlaying
 
-    if @execution is "duringStreak" and @actionLapseType is "time"
-      @debouncedActionDuringStreakDuringStreak()
-
-
-    if @execution is "endMusic"
-      @music.onended = =>
-        @actionDuringStreak()
-    else
-      @music.onended = =>
-        @autoPlay()
+    if @musicCong.actionDuringStreak != "none" and @musicCong.typeLapse is "time"
+      console.log "es imbocado: debouncedActionDuringStreak"
+      @debouncedActionDuringStreak(@musicCong.actionDuringStreak)
 
     @isPlaying = true
+    console.log "es imbocado: music.play"
     @music.play()
 
   pause: ->
+    console.log "es imbocado: music pause"
     @isPlaying = false
     @music.pause()
 
   stop: -> #arreglar error se ejuta primero
+    console.log "es imbocado: stop"
     @isPlaying = false
     if @music != null
       @music.pause()
       @music.currentTime = 0
 
   autoPlay: ->
-    if @execution is "endMusic"
+    console.log "es imbocado: autoplay"
+    if @musicCong.actionEndMusic != "none"
       @music.onended = =>
-        @actionDuringStreak()
+        @actionDuringStreak(@musicCong.actionEndMusic)
     else
-      @music.onended = =>
-        @autoPlay()
-
+      @music.onended = null
     @isPlaying = true
     @music.play()
 
+  previous: ->
+    console.log "es imbocado: previous"
+    @stop()
+    maxIndex = @musicFiles.length - 1
+    if (@currentMusic > 0)
+      @currentMusic--
+    else
+      @currentMusic = maxIndex
+    @music = new Audio(@musicCong.pathtoMusic + @musicFiles[@currentMusic])
+    @music.volume = @getConfig "musicVolume"
+
   next: ->
+    console.log "es imbocado: next"
     @stop()
     maxIndex = @musicFiles.length - 1
     if (maxIndex > @currentMusic)
       @currentMusic++
     else
       @currentMusic = 0
-
-    @music = new Audio(@pathtoMusic + @musicFiles[@currentMusic])
+    @music = new Audio(@musicCong.pathtoMusic + @musicFiles[@currentMusic])
     @music.volume = @getConfig "musicVolume"
 
-  actionDuringStreak: (streak = 0) ->
+  actionDuringStreak: (action, streak = 0) ->
     if streak is 0
-      if @actionLapse != 0 and @actionLapseType is "time"
-        @stop() if @action is "repeat"
-        @next() if @action is "change"
-        @autoPlay()
-        return @debouncedActionDuringStreakDuringStreak()
-      if(@execution is "endMusic")
-        @stop() if @action is "repeat"
-        @next() if @action is "change"
-        return @autoPlay()
-    else
-      if(streak % @actionLapse is 0 and @actionLapseType is "streak")
-        @stop() if @action is "repeat"
-        @next() if @action is "change"
-        return @autoPlay()
+      console.log("La accion es: " + @musicCong.actionDuringStreak)
+      @play()     if action is "play"
+      @pause()    if action is "pause"
+      @stop()     if action is "repeat" or action is "stop"
+      @previous() if action is "previous"
+      @next()     if action is "next"
+      @debouncedActionDuringStreak(@musicCong.actionDuringStreak) if @musicCong.typeLapse is "time"
+      return @autoPlay() if action != "stop" and @getConfigActions "autoplay"
+    else if streak % @musicCong.lapse is 0
+      console.log("La accion es: " + @musicCong.endMusic)
+      @play()     if action is "play"
+      @pause()    if action is "pause"
+      @stop()     if action is "repeat" or action is "stop"
+      @previous() if action is "previous"
+      @next()     if action is "next"
+      return @autoPlay() if action != "stop" and @getConfigActions "autoplay"
 
   actionEndStreak: ->
-    @debouncedActionDuringStreak?.cancel()
-    return @stop() if(@action is "repeat") and (@execution is "endStreak")
-    return @next() if(@action is "change")  and (@execution is "endStreak")
-    @pause()
+    if @isPlayin
+      console.log("La accion es: " + @musicCong.actionEndStreak)
+      @debouncedActionDuringStreak?.cancel()
+      @pause() if @musicCong.actionEndStreak != "stop" and @getConfigActions "actionEndStreak.pause"
+      return @stop()     if @musicCong.actionEndStreak is "repeat"
+      return @previous() if @musicCong.actionEndStreak is "previous"
+      return @next()     if @musicCong.actionEndStreak is "next"
+
+  actionNextLevel: ->
+    console.log("La accion es: " + @musicCong.actionNextLevel)
+    @play()     if @musicCong.actionNextLevel is "play"
+    @pause()    if @musicCong.actionNextLevel is "pause"
+    @stop()     if @musicCong.actionNextLevel is "repeat" or @musicCong.actionNextLevel is "stop"
+    @previous() if @musicCong.actionNextLevel is "previous"
+    @next()     if @musicCong.actionNextLevel is "next"
+    return @autoPlay() if @musicCong.actionNextLevel != "stop" and @getConfigActions "autoplay"
 
   getConfig: (config) ->
     atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
+
+  getConfigActions: (config) ->
+    atom.config.get "activate-background-music.actions.#{config}"

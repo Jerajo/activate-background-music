@@ -56,11 +56,20 @@ module.exports =
         default: true
         order: 1
 
+      activationThreshold:
+        title: "Background Music - Activation Threshold"
+        description: "Background Music won't play until current streak reach the activation threshold."
+        type: "number"
+        default: 10
+        minimum: 1
+        maximum: 1000
+        order: 1
+
       musicPath:
         title: "Background Music - Path to Audio"
         description: "Path to Music Tracks played in combo Mode."
         type: "string"
-        default: '../sounds/'
+        default: '../sounds/musics/'
         order: 2
 
       musicVolume:
@@ -74,28 +83,37 @@ module.exports =
 
   actions:
     order: 4
-    title: "Music Player - Actions"
-    description: "Actions executed with the music player"
     type: "object"
     properties:
-      duringStreak:
+      autoplay:
+        title: "Music Player - Actions - Auto-play"
+        description: "Auto play the music after an action execution, during streak, next level, and music end."
+        type: "boolean"
+        default: true
         order: 1
+
+      duringStreak:
+        order: 2
         type: "object"
         properties:
           action:
             title: "Music Player - Action During Streak"
             description: "Action executed during streak."
             type: "string"
-            default: 'change'
+            default: 'next'
             enum: [
-              {value: 'change', description: 'Change Music'}
-              {value: 'repeat', description: 'Repeat Music'}
               {value: 'none', description: 'None'}
+              {value: 'play', description: 'Play Music'}
+              {value: 'pause', description: 'Pasue Music'}
+              {value: 'stop', description: 'Stop Music'}
+              {value: 'repeat', description: 'Repeat Music'}
+              {value: 'previous', description: 'previous Music'}
+              {value: 'next', description: 'Next Music'}
             ]
             order: 1
 
           typeLapse:
-            title: "Music Player - Type of Lapse"
+            title: "Music Player - Action During Streak - Type of Lapse"
             description: "Type of lapse used for the action during streak."
             type: "string"
             default: 'streak'
@@ -106,7 +124,7 @@ module.exports =
             order: 2
 
           lapse:
-            title: "Music Player - Lapse"
+            title: "Music Player - Action During Streak - Lapse"
             description: "Lapse for acion execution on streaks or seconds."
             type: "number"
             default: 100
@@ -118,6 +136,13 @@ module.exports =
         order: 2
         type: "object"
         properties:
+          pause:
+            title: "Music Player - Action On Streak End - Pause"
+            description: "Pause the music when streak ends."
+            type: "boolean"
+            default: true
+            order: 1
+
           action:
             title: "Music Player - Action On Streak End"
             description: "Action executed when the combo streak ends."
@@ -125,10 +150,12 @@ module.exports =
             default: 'pause'
             enum: [
               {value: 'pause', description: 'Pasue Music'}
-              {value: 'change', description: 'Change Music'}
-              {value: 'stop', description: 'Repeat Music'}
-              {value: 'none', description: 'None'}
+              {value: 'stop', description: 'Stop Music'}
+              {value: 'repeat', description: 'Repeat Music'}
+              {value: 'previous', description: 'previous Music'}
+              {value: 'next', description: 'Next Music'}
             ]
+            order: 2
 
       nextLevel:
         order: 3
@@ -138,12 +165,15 @@ module.exports =
             title: "Music Player - Action On Next Level"
             description: "Action executed when the combo level changes."
             type: "string"
-            default: 'none'
+            default: 'next'
             enum: [
-              {value: 'pause', description: 'Pasue Music'}
-              {value: 'next', description: 'Change Music'}
-              {value: 'repeat', description: 'Repeat Music'}
               {value: 'none', description: 'None'}
+              {value: 'play', description: 'Play Music'}
+              {value: 'pause', description: 'Pasue Music'}
+              {value: 'stop', description: 'Stop Music'}
+              {value: 'repeat', description: 'Repeat Music'}
+              {value: 'previous', description: 'previous Music'}
+              {value: 'next', description: 'Next Music'}
             ]
 
       endMusic:
@@ -154,10 +184,13 @@ module.exports =
             title: "Music Player - Action On Music End"
             description: "Action executed when music ends."
             type: "string"
-            default: 'pause'
+            default: 'repeat'
             enum: [
-              {value: 'pause', description: 'Pasue Music'}
-              {value: 'change', description: 'Change Music'}
-              {value: 'repeat', description: 'Repeat Music'}
               {value: 'none', description: 'None'}
+              {value: 'play', description: 'Play Music'}
+              {value: 'pause', description: 'Pasue Music'}
+              {value: 'stop', description: 'Stop Music'}
+              {value: 'repeat', description: 'Repeat Music'}
+              {value: 'previous', description: 'previous Music'}
+              {value: 'next', description: 'Next Music'}
             ]

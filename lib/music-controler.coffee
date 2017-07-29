@@ -1,4 +1,4 @@
-musicPlayer = require "./music-player3"
+musicPlayer = require "./music-player"
 
 module.exports =
 
@@ -19,14 +19,20 @@ module.exports =
     #@musicPlayer.play @api.getCombo()
 
   onComboStartStreak: () ->
-    @musicPlayer.play @api.getCombo()
-    
+    if @api.getCombo() >= @getConfig "activationThreshold"
+      @musicPlayer.play @api.getCombo()
+
   onComboLevelChange: (newLvl, oldLvl) ->
-    @musicPlayer.actionDuringStreak
+    console.log "es imbocado: actionNextLevel"
+    @musicPlayer.actionNextLevel()
 
   onComboEndStreak: () ->
+    console.log "es imbocado: actionEndStreak"
     @musicPlayer.actionEndStreak()
 
   #onComboExclamation: (text) ->
 
   #onComboMaxStreak: (maxStreak) ->
+
+  getConfig: (config) ->
+    atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
