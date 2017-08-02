@@ -18,6 +18,8 @@ module.exports = activateBackgroundMusic =
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:toggle": => @toggle()
 
+    @playIntroAudio.play()
+
     #if @getConfig "autoToggle"
       #@toggle()
 
@@ -25,6 +27,10 @@ module.exports = activateBackgroundMusic =
 
   consumeActivatePowerModeServiceV1: (service) ->
     service.registerPlugin('activateBackgroundMusic', musiControler)
+
+  consumeConsolePanel: (@consolePanel) ->
+    log: (message) ->
+        @consolePanel.log(message)
 
   toggle: ->
     if @active then @disable() else @enable()

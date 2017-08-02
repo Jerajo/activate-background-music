@@ -28,6 +28,7 @@ module.exports =
       #@musicPlayer.play combo.getCurrentStreak()
 
   onComboLevelChange: (newLvl, oldLvl) ->
+    log "es imbocado: actionNextLevel"
     console.log "es imbocado: actionNextLevel"
     @musicPlayer.actionNextLevel()
 
@@ -42,3 +43,6 @@ module.exports =
 
   getConfig: (config) ->
     atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
+
+  log: (message) ->
+    @consolePanel.log(message)

@@ -100,12 +100,9 @@ module.exports =
             title: "Music Player - Action During Streak"
             description: "Action executed during streak."
             type: "string"
-            default: 'next'
+            default: 'none'
             enum: [
               {value: 'none', description: 'None'}
-              {value: 'play', description: 'Play Music'}
-              {value: 'pause', description: 'Pasue Music'}
-              {value: 'stop', description: 'Stop Music'}
               {value: 'repeat', description: 'Repeat Music'}
               {value: 'previous', description: 'previous Music'}
               {value: 'next', description: 'Next Music'}
