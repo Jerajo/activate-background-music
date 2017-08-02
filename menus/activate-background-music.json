@@ -1,0 +1,46 @@
+{
+  "context-menu": {
+    "atom-text-editor": [
+      {
+        "label": "Toggle Activate Background Music",
+        "command": "activate-background-music:toggle"
+      }
+    ]
+  },
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "Activate Background Music",
+          "submenu": [
+            {
+              "label": "Play / Pasue (Toggle)",
+              "command": "activate-background-music:play/pasue"
+            },
+            {
+              "label": "Stop",
+              "command": "activate-background-music:stop"
+            },
+            {
+              "label": "Repeat",
+              "command": "activate-background-music:repeat"
+            },
+            {
+              "label": "Next",
+              "command": "activate-background-music:next"
+            },
+            {
+              "label": "Previous",
+              "command": "activate-background-music:previous"
+            },
+            {
+              "label": "Mute (Toggle)",
+              "command": "activate-background-music:muteToggle"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

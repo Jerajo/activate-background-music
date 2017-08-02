@@ -103,6 +103,9 @@ module.exports =
             default: 'none'
             enum: [
               {value: 'none', description: 'None'}
+              {value: 'play', description: 'Play Music'}
+              {value: 'pause', description: 'Pasue Music'}
+              {value: 'stop', description: 'Stop Music'}
               {value: 'repeat', description: 'Repeat Music'}
               {value: 'previous', description: 'previous Music'}
               {value: 'next', description: 'Next Music'}

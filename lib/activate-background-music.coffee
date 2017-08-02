@@ -16,7 +16,17 @@ module.exports = activateBackgroundMusic =
     console.log("Se activo mi paquete XD")
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:toggle": => @toggle()
+      "activate-background-music:play/pasue": => @musiControler.playPause()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:stop": => @musiControler.stop()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:repeat": => @musiControler.repeat()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:next": => @musiControler.next()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:previous": => @musiControler.previous()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:muteToggle": => @musiControler.muteToggle()
 
     @playIntroAudio.play()
 
@@ -26,14 +36,7 @@ module.exports = activateBackgroundMusic =
     #require('atom-package-deps').install('activate-power-mode-background-music');
 
   consumeActivatePowerModeServiceV1: (service) ->
-    service.registerPlugin('activateBackgroundMusic', musiControler)
-
-  consumeConsolePanel: (@consolePanel) ->
-    log: (message) ->
-        @consolePanel.log(message)
-
-  toggle: ->
-    if @active then @disable() else @enable()
+    service.registerPlugin('activateBackgroundMusic', @musiControler)
 
   enable: ->
     @active = true

@@ -147,6 +147,19 @@ module.exports =
     @music = new Audio(@musicCong.pathtoMusic + @musicFiles[@currentMusic])
     @music.volume = @getConfig "musicVolume"
 
+  mute: (timer = 0) ->
+    console.log "es imbocado: mute"
+    if timer is 0
+      if @music.volume != 0
+        @music.volume = 0
+      else
+        @music.volume = @getConfig "musicVolume"
+    else
+      time = timer * 1000
+      @debouncedMute?.cancel()
+      @debouncedMute = debounce @mute.bind(this), @time
+      @debouncedMute()
+
   actionDuringStreak: (action, streak = 0) ->
     if streak is 0
       console.log("La accion es: " + @musicCong.actionDuringStreak)

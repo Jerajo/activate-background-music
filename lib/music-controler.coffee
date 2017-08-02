@@ -28,7 +28,6 @@ module.exports =
       #@musicPlayer.play combo.getCurrentStreak()
 
   onComboLevelChange: (newLvl, oldLvl) ->
-    log "es imbocado: actionNextLevel"
     console.log "es imbocado: actionNextLevel"
     @musicPlayer.actionNextLevel()
 
@@ -41,8 +40,33 @@ module.exports =
 
   #onComboMaxStreak: (maxStreak) ->
 
+  playPause: ->
+    if @musicPlayer.isPlaying
+      @musicPlayer.pause()
+    else
+      @musicPlayer.play()
+
+  stop: ->
+    @musicPlayer.stop() if @musicPlayer.isPlaying
+
+  repeat: ->
+    isplayin = @musicPlayer.isPlaying ? true : false
+    @musicPlayer.stop()
+    @musicPlayer.autoPlay() if isplayin
+
+  next: ->
+    isplayin = @musicPlayer.isPlaying ? true : false
+    @musicPlayer.next()
+    @musicPlayer.autoPlay() if isplayin
+
+  previous: ->
+    isplayin = @musicPlayer.isPlaying ? true : false
+    @musicPlayer.previous()
+    @musicPlayer.autoPlay() if isplayin
+
+  muteToggle: ->
+    @musicPlayer.mute()
+
+
   getConfig: (config) ->
     atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
-
-  log: (message) ->
-    @consolePanel.log(message)
