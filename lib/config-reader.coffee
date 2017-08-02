@@ -10,6 +10,7 @@ module.exports =
     lapse: 0
 
     setup: ->
+      console.log "se invoca: septup2"
       @musicPathObserver?.dispose()
       @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (value) =>
         if value is "../sounds/musics/"

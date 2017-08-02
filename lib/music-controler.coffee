@@ -15,20 +15,26 @@ module.exports =
 
   #onChangePane: (editor, editorElement) ->
 
-  #onInput: (cursor, screenPosition, input, data) ->
-    #@musicPlayer.play @api.getCombo()
+  onInput: (cursor, screenPosition, input, data) ->
+    combo = @api.getCombo()
+    console.log "onInput Invocado " + combo.getCurrentStreak() + " " + @getConfig "activationThreshold"
+    if combo.getCurrentStreak() >= @getConfig "activationThreshold"
+      @musicPlayer.play combo.getCurrentStreak()
 
-  onComboStartStreak: () ->
-    if @api.getCombo() >= @getConfig "activationThreshold"
-      @musicPlayer.play @api.getCombo()
+  #onComboStartStreak: () ->
+    #combo = @api.getCombo()
+    #console.log "es imbocado: comboStartStreak " + combo.getCurrentStreak() + " " + @getConfig "activationThreshold"
+    #if combo.getCurrentStreak() >= @getConfig "activationThreshold"
+      #@musicPlayer.play combo.getCurrentStreak()
 
   onComboLevelChange: (newLvl, oldLvl) ->
     console.log "es imbocado: actionNextLevel"
     @musicPlayer.actionNextLevel()
 
   onComboEndStreak: () ->
-    console.log "es imbocado: actionEndStreak"
-    @musicPlayer.actionEndStreak()
+    if @musicPlayer.isPlaying
+      console.log "es imbocado: actionEndStreak"
+      @musicPlayer.actionEndStreak()
 
   #onComboExclamation: (text) ->
 

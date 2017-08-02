@@ -13,13 +13,14 @@ module.exports = activateBackgroundMusic =
   playIntroAudio: playIntroAudio
 
   activate: (state) ->
+    console.log("Se activo mi paquete XD")
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:toggle": => @toggle()
 
-    if @getConfig "autoToggle"
-      @toggle()
-    #console.log("Se activo mi paquete XD")
+    #if @getConfig "autoToggle"
+      #@toggle()
+
     #require('atom-package-deps').install('activate-power-mode-background-music');
 
   consumeActivatePowerModeServiceV1: (service) ->

@@ -6,7 +6,7 @@ debounce = require "lodash.debounce"
 module.exports =
   musicCong: configReader
   music: null
-  isPlayin: false
+  isPlaying: false
   isSetup: false
   musicFiles: null
   currentMusic: 0
@@ -14,6 +14,7 @@ module.exports =
   timeLapse: 0
 
   setup: ->
+    console.log "se invoca: septup1"
     @musicEnabledObserver?.dispose()
     @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (Enabled) =>
       if not Enabled and @isSetup
@@ -75,10 +76,11 @@ module.exports =
       @isSetup = false
       @music = null
       @musicFiles = null
-      isPlayin = false
+      isPlaying = false
       currentMusic = 0
 
   play: (streak) ->
+    console.log "se invoca: play"
     #@setup() if not @isSetup
     if @musicCong.actionDuringStreak != "none" and @musicCong.typeLapse is "time"
       console.log "es imbocado: actionDuringStreak"
@@ -147,19 +149,19 @@ module.exports =
       @stop()     if action is "repeat" or action is "stop"
       @previous() if action is "previous"
       @next()     if action is "next"
-      @debouncedActionDuringStreak(@musicCong.actionDuringStreak) if @musicCong.typeLapse is "time"
-      return @autoPlay() if action != "stop" and @getConfigActions "autoplay"
+      return @debouncedActionDuringStreak(@musicCong.actionDuringStreak) if @musicCong.typeLapse is "time"
+      #return @autoPlay() if action != "stop" and @getConfigActions "autoplay"
     else if streak % @musicCong.lapse is 0
       console.log("La accion es: " + @musicCong.endMusic)
-      @play()     if action is "play"
-      @pause()    if action is "pause"
-      @stop()     if action is "repeat" or action is "stop"
-      @previous() if action is "previous"
-      @next()     if action is "next"
-      return @autoPlay() if action != "stop" and @getConfigActions "autoplay"
+      return @play()     if action is "play"
+      return @pause()    if action is "pause"
+      return @stop()     if action is "repeat" or action is "stop"
+      return @previous() if action is "previous"
+      return @next()     if action is "next"
+      #return @autoPlay() if action != "stop" and @getConfigActions "autoplay"
 
   actionEndStreak: ->
-    if @isPlayin
+    if @isPlaying
       console.log("La accion es: " + @musicCong.actionEndStreak)
       @debouncedActionDuringStreak?.cancel()
       @pause() if @musicCong.actionEndStreak != "stop" and @getConfigActions "actionEndStreak.pause"
@@ -174,7 +176,8 @@ module.exports =
     @stop()     if @musicCong.actionNextLevel is "repeat" or @musicCong.actionNextLevel is "stop"
     @previous() if @musicCong.actionNextLevel is "previous"
     @next()     if @musicCong.actionNextLevel is "next"
-    return @autoPlay() if @musicCong.actionNextLevel != "stop" and @getConfigActions "autoplay"
+    if @musicCong.actionNextLevel != "stop" and @musicCong.actionNextLevel != "pause" and @musicCong.actionNextLevel != "none"
+      return @autoPlay() if @musicCong.actionNextLevel != "stop" and @getConfigActions "autoplay"
 
   getConfig: (config) ->
     atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
