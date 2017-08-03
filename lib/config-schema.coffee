@@ -39,10 +39,10 @@ module.exports =
       volume:
         title: "Play Intro Audio - Volume"
         description: "Volume of the audio clip played at keystroke."
-        type: "number"
-        default: 1
-        minimum: 0.0
-        maximum: 1.0
+        type: "integer"
+        default: 50
+        minimum: 0
+        maximum: 100
         order: 4
 
   playBackgroundMusic:
@@ -75,10 +75,10 @@ module.exports =
       musicVolume:
         title: "Background Music - Volume"
         description: "Volume of the Music Track played in combo Mode."
-        type: "number"
-        default: 0.25
-        minimum: 0.0
-        maximum: 1.0
+        type: "integer"
+        default: 50
+        minimum: 0
+        maximum: 100
         order: 3
 
   actions:
@@ -192,3 +192,11 @@ module.exports =
               {value: 'previous', description: 'Previous Music'}
               {value: 'next', description: 'Next Music'}
             ]
+
+      volumeChangeRate:
+        title: "Music Player - Volume Change Rate"
+        description: "Change Rate for Volume Up and Down actions."
+        type: "integer"
+        default: 10
+        minimum: 1
+        maximum: 100

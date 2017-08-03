@@ -64,9 +64,12 @@ module.exports =
   previous: ->
     @musicPlayer.previous() if @active
 
+  volumeUpDown: (action) ->
+    console.log "es invocado: volumeUpDown"
+    @musicPlayer.volumeUpDown action
+
   muteToggle: ->
     @musicPlayer.mute() if @active
-
 
   getConfig: (config) ->
     atom.config.get "activate-background-music.playBackgroundMusic.#{config}"

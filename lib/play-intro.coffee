@@ -8,7 +8,7 @@ module.exports =
       pathtoaudio = path.join(__dirname, @getConfig "audioclip")
     audio = new Audio(pathtoaudio)
     audio.currentTime = 0
-    audio.volume = @getConfig "volume"
+    audio.volume = (@getConfig("volume") * 0.01)
     audio.play()
 
   getConfig: (config) ->

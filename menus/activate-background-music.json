@@ -15,6 +15,10 @@
           "label": "Activate Background Music",
           "submenu": [
             {
+              "label": "Toggle ( On / Off )",
+              "command": "activate-background-music:toggle"
+            },
+            {
               "label": "Play / Pasue (Toggle)",
               "command": "activate-background-music:play/pasue"
             },
@@ -33,6 +37,14 @@
             {
               "label": "Previous",
               "command": "activate-background-music:previous"
+            },
+            {
+              "label": "Volume Up(+)",
+              "command": "activate-background-music:volumeUp"
+            },
+            {
+              "label": "Volume Down(-)",
+              "command": "activate-background-music:volumeDown"
             },
             {
               "label": "Mute (Toggle)",

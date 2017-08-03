@@ -27,7 +27,11 @@ module.exports =
         @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (newValue, oldValue) =>
           @musicFiles = @getAudioFiles()
           @music = new Audio(@musicCong.pathtoMusic + @musicFiles[@currentMusic])
-          @music.volume = if @isMute then 0 else @getConfig "musicVolume"
+          @music.volume = if @isMute then 0 else (@getConfig("musicVolume") * 0.01)
+
+        @musicVolumeObserver?.dispose()
+        @musicVolumeObserver = atom.config.observe 'activate-background-music.playBackgroundMusic', (value) =>
+          @setVolume()
 
         @lapseTypeObserver?.dispose()
         @lapseTypeObserver = atom.config.observe 'activate-background-music.actions.duringStreak.typeLapse', (newValue, oldValue) =>
@@ -72,6 +76,7 @@ module.exports =
     if @music != null and @isSetup is true
       @stop()
       @musicPathObserver?.dispose()
+      @musicVolumeObserver?.dispose()
       @lapseTypeObserver?.dispose()
       @debouncedActionDuringStreak?.cancel()
       @debouncedActionDuringStreak = null
@@ -126,7 +131,7 @@ module.exports =
     else
       @currentMusic = maxIndex
     @music = new Audio(@musicCong.pathtoMusic + @musicFiles[@currentMusic])
-    @music.volume = if @isMute then 0 else @getConfig "musicVolume"
+    @music.volume = if @isMute then 0 else (@getConfig("musicVolume") * 0.01)
     if @musicCong.actionEndMusic != "none"
       @music.onended = =>
         @performAction @musicCong.actionEndMusic
@@ -144,7 +149,7 @@ module.exports =
     else
       @currentMusic = 0
     @music = new Audio(@musicCong.pathtoMusic + @musicFiles[@currentMusic])
-    @music.volume = if @isMute then 0 else @getConfig "musicVolume"
+    @music.volume = if @isMute then 0 else (@getConfig("musicVolume") * 0.01)
     if @musicCong.actionEndMusic != "none"
       @music.onended = =>
         @performAction @musicCong.actionEndMusic
@@ -152,10 +157,29 @@ module.exports =
       @music.onended = null
     @autoPlay() if isplaying and @getConfigActions "autoplay"
 
+  volumeUpDown: (action = "") ->
+    @isMute = false
+    volume = @getConfig "musicVolume"
+    if action is "up"
+      console.log "la accion es: volumeUp"
+      volume += @getConfigActions "volumeChangeRate"
+    else if action is "down"
+      console.log "la accion es: volumeDown"
+      if (volume - @getConfigActions("volumeChangeRate") < 0)
+        volume = 0
+      else
+        volume -= @getConfigActions "volumeChangeRate"
+    console.log "El volumen es: " + volume
+    @setConfig("musicVolume", volume)
+
+  setVolume: ->
+    @music.volume = (@getConfig("musicVolume") * 0.01)
+    console.log "El volumen actual es: " + @getConfig "musicVolume"
+
   mute: (timer = 0) ->
     console.log "es imbocado: mute"
     @isMute = !@isMute
-    @music.volume = if @isMute then 0 else @getConfig "musicVolume"
+    @music.volume = if @isMute then 0 else (@getConfig("musicVolume") * 0.01)
     if timer != 0
       time = timer * 1000
       @debouncedMute?.cancel()
@@ -190,6 +214,9 @@ module.exports =
 
   getConfig: (config) ->
     atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
+
+  setConfig: (config, value) ->
+    atom.config.set("activate-background-music.playBackgroundMusic.#{config}", value)
 
   getConfigActions: (config) ->
     atom.config.get "activate-background-music.actions.#{config}"
