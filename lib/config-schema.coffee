@@ -87,7 +87,7 @@ module.exports =
     properties:
       autoplay:
         title: "Music Player - Actions - Auto-play"
-        description: "Auto play the music after an action execution, during streak, next level, and music end."
+        description: "Auto play the music after the action execution, wont apply on stop and pause actions. If pause option is enabled on action streak ends this setting won't apply on that event."
         type: "boolean"
         default: true
         order: 1
