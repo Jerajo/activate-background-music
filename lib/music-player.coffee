@@ -80,17 +80,14 @@ module.exports =
       @musicFiles = null
       isPlaying = false
       currentMusic = 0
+      isMute: false
 
   play: ->
     console.log "se invoca: play"
     @isPlaying = false if (@music.paused)
     return null if @isPlaying
 
-    if @debouncedActionDuringStreak? and @debouncedActionDuringStreak != null
-      @debouncedActionDuringStreak(@musicCong.actionDuringStreak)
-
     @isPlaying = true
-    console.log "es imbocado: music.play"
     @music.play()
 
   pause: ->
@@ -106,13 +103,13 @@ module.exports =
       @music.currentTime = 0
 
   repeat: ->
-    isplayin = @isPlaying
+    isplaying = @isPlaying
     console.log "es imbocado: stop"
     @isPlaying = false
     if @music != null
       @music.pause()
       @music.currentTime = 0
-    @autoPlay() if isplayin if isplayin and @getConfigActions "autoplay"
+    @autoPlay() if isplaying and @getConfigActions "autoplay"
 
   autoPlay: ->
     console.log "es imbocado: autoplay"
@@ -120,7 +117,7 @@ module.exports =
     @music.play()
 
   previous: ->
-    isplayin = @isPlaying
+    isplaying = @isPlaying
     console.log "es imbocado: previous"
     @stop()
     maxIndex = @musicFiles.length - 1
@@ -135,10 +132,10 @@ module.exports =
         @performAction @musicCong.actionEndMusic
     else
       @music.onended = null
-    @autoPlay() if isplayin if isplayin and @getConfigActions "autoplay"
+    @autoPlay() if isplaying and @getConfigActions "autoplay"
 
   next: ->
-    isplayin = @isPlaying
+    isplaying = @isPlaying
     console.log "es imbocado: next"
     @stop()
     maxIndex = @musicFiles.length - 1
@@ -153,7 +150,7 @@ module.exports =
         @performAction @musicCong.actionEndMusic
     else
       @music.onended = null
-    @autoPlay() if isplayin and @getConfigActions "autoplay"
+    @autoPlay() if isplaying and @getConfigActions "autoplay"
 
   mute: (timer = 0) ->
     console.log "es imbocado: mute"

@@ -107,7 +107,7 @@ module.exports =
               {value: 'pause', description: 'Pasue Music'}
               {value: 'stop', description: 'Stop Music'}
               {value: 'repeat', description: 'Repeat Music'}
-              {value: 'previous', description: 'previous Music'}
+              {value: 'previous', description: 'Previous Music'}
               {value: 'next', description: 'Next Music'}
             ]
             order: 1
@@ -147,12 +147,12 @@ module.exports =
             title: "Music Player - Action On Streak End"
             description: "Action executed when the combo streak ends."
             type: "string"
-            default: 'pause'
+            default: 'none'
             enum: [
-              {value: 'pause', description: 'Pasue Music'}
+              {value: 'none', description: 'None'}
               {value: 'stop', description: 'Stop Music'}
               {value: 'repeat', description: 'Repeat Music'}
-              {value: 'previous', description: 'previous Music'}
+              {value: 'previous', description: 'Previous Music'}
               {value: 'next', description: 'Next Music'}
             ]
             order: 2
@@ -172,7 +172,7 @@ module.exports =
               {value: 'pause', description: 'Pasue Music'}
               {value: 'stop', description: 'Stop Music'}
               {value: 'repeat', description: 'Repeat Music'}
-              {value: 'previous', description: 'previous Music'}
+              {value: 'previous', description: 'Previous Music'}
               {value: 'next', description: 'Next Music'}
             ]
 
@@ -188,9 +188,7 @@ module.exports =
             enum: [
               {value: 'none', description: 'None'}
               {value: 'play', description: 'Play Music'}
-              {value: 'pause', description: 'Pasue Music'}
-              {value: 'stop', description: 'Stop Music'}
               {value: 'repeat', description: 'Repeat Music'}
-              {value: 'previous', description: 'previous Music'}
+              {value: 'previous', description: 'Previous Music'}
               {value: 'next', description: 'Next Music'}
             ]

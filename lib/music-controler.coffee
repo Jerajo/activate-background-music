@@ -2,24 +2,32 @@ musicPlayer = require "./music-player"
 
 module.exports =
 
+  active: false
   api: null
   musicPlayer: musicPlayer
   isCombomode: false
 
   enable: (api) ->
+    @active = true
     @api = api
     @musicPlayer.setup()
 
   disable: ->
+    @active = false
+    @api = null
     @musicPlayer.destroy()
 
   #onChangePane: (editor, editorElement) ->
 
   onInput: (cursor, screenPosition, input, data) ->
+    #console.log "es imbocado: actionInput"
     combo = @api.getCombo()
-    console.log "onInput Invocado " + combo.getCurrentStreak() + " " + @getConfig "activationThreshold"
+    if @musicPlayer.debouncedActionDuringStreak? and @musicPlayer.debouncedActionDuringStreak != null and not @musicPlayer.isPlaying
+      console.log "actionDuringStreak:Time"
+      @musicPlayer.debouncedActionDuringStreak "actionDuringStreak"
     if combo.getCurrentStreak() >= @getConfig "activationThreshold"
-      @musicPlayer.play()
+      #console.log "actionDuringStreak:Streak (" + combo.getCurrentStreak() + " == " + @getConfig("activationThreshold") + ")"
+      @musicPlayer.play() if not @musicPlayer.isPlaying
       @musicPlayer.action("duringStreak",combo.getCurrentStreak)
 
   #onComboStartStreak: () ->
@@ -29,11 +37,11 @@ module.exports =
       #@musicPlayer.play combo.getCurrentStreak()
 
   onComboLevelChange: (newLvl, oldLvl) ->
-    console.log "es imbocado: actionNextLevel"
+    #console.log "es imbocado: actionNextLevel"
     @musicPlayer.action "onNextLevel"
 
   onComboEndStreak: () ->
-    console.log "es imbocado: actionEndStreak"
+    #console.log "es imbocado: actionEndStreak"
     @musicPlayer.action "endStreak"
 
   #onComboExclamation: (text) ->
@@ -41,25 +49,23 @@ module.exports =
   #onComboMaxStreak: (maxStreak) ->
 
   playPause: ->
-    if @musicPlayer.isPlaying
-      @musicPlayer.pause()
-    else
-      @musicPlayer.play()
+    return @musicPlayer.pause() if @musicPlayer.isPlaying and @active
+    return @musicPlayer.play()  if @active
 
   stop: ->
-    @musicPlayer.stop() if @musicPlayer.isPlaying
+    @musicPlayer.stop() if @musicPlayer.isPlaying and @active
 
   repeat: ->
-    @musicPlayer.repeat()
+    @musicPlayer.repeat() if @active
 
   next: ->
-    @musicPlayer.next()
+    @musicPlayer.next() if @active
 
   previous: ->
-    @musicPlayer.previous()
+    @musicPlayer.previous() if @active
 
   muteToggle: ->
-    @musicPlayer.mute()
+    @musicPlayer.mute() if @active
 
 
   getConfig: (config) ->
