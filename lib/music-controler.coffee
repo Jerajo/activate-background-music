@@ -10,12 +10,12 @@ module.exports =
   enable: (api) ->
     @active = true
     @api = api
-    @musicPlayer.setup()
+    @musicPlayer.enable()
 
   disable: ->
     @active = false
     @api = null
-    @musicPlayer.destroy()
+    @musicPlayer.disable()
 
   #onChangePane: (editor, editorElement) ->
 

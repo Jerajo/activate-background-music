@@ -1,7 +1,4 @@
-path = require "path"
-
 module.exports =
-    pathtoMusic: ""
     actionDuringStreak: ""
     actionEndStreak: ""
     actionNextLevel: ""
@@ -10,14 +7,6 @@ module.exports =
     lapse: 0
 
     setup: ->
-      console.log "se invoca: septup2"
-      @musicPathObserver?.dispose()
-      @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (value) =>
-        if value is "../sounds/musics/"
-          @pathtoMusic = path.join(__dirname, value)
-        else
-          @pathtoMusic = value
-
       @actionDuringStreakObserver?.dispose()
       @actionDuringStreakObserver = atom.config.observe 'activate-background-music.actions.duringStreak', (value) =>
         @actionDuringStreak = value.action
