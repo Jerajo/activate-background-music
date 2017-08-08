@@ -1,11 +1,4 @@
 module.exports =
-  autoToggle:
-    order: 1
-    title: "Auto Toggle"
-    description: "Toggle on start."
-    type: "boolean"
-    default: true
-
 
   playIntroAudio:
     type: "object"
@@ -54,15 +47,6 @@ module.exports =
         description: "Play Background Music on/off."
         type: "boolean"
         default: true
-        order: 1
-
-      activationThreshold:
-        title: "Background Music - Activation Threshold"
-        description: "Background Music won't play until current streak reach the activation threshold."
-        type: "number"
-        default: 10
-        minimum: 1
-        maximum: 1000
         order: 1
 
       musicPath:
@@ -127,7 +111,7 @@ module.exports =
             title: "Music Player - Action During Streak - Lapse"
             description: "Lapse for acion execution on streaks or seconds."
             type: "number"
-            default: 100
+            default: 1000
             minimum: 10
             maximum: 100000
             order: 3

@@ -11,10 +11,10 @@ module.exports =
   isMute: false
 
   disable: ->
-    console.log "es imbocado: destroy"
+    console.log "es imbocado: desable"
     @musicCong.destroy()
     if @music != null and @isSetup is true
-      @stop()
+      @music.pause
       @musicPathObserver?.dispose()
       @musicVolumeObserver?.dispose()
       pathtoMusic: ""
@@ -25,10 +25,8 @@ module.exports =
       @isMute = false
 
   setup: ->
-    console.log "se invoca: septup1"
     @musicCong.setup()
 
-    console.log "se invoca: septup2"
     @musicPathObserver?.dispose()
     @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (value) =>
       if value is "../sounds/musics/"
@@ -39,7 +37,6 @@ module.exports =
       @musicFiles = @getAudioFiles()
 
       if @musicFiles is null
-        #alert("Note! The folder doesn't contain audio files!\nThis may cause an error.");
         console.log "Note! The folder doesn't contain audio files!\nThis may cause an error."
         console.log @musicFiles
         @setConfig("musicPath","../sounds/musics/")
@@ -47,6 +44,11 @@ module.exports =
         @music.pause() if @music != null and @isPlaying
         @music = new Audio(@pathtoMusic + @musicFiles[0])
         @music.volume = if @isMute then 0 else (@getConfig("musicVolume") * 0.01)
+
+    @musicVolumeObserver?.dispose()
+    @musicVolumeObserver = atom.config.observe 'activate-background-music.playBackgroundMusic', (value) =>
+      @music.volume = (@getConfig("musicVolume") * 0.01) if @music != null
+      console.log "El volumen actual es: " + @getConfig "musicVolume"
 
     @isSetup = true
 
