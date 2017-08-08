@@ -14,7 +14,6 @@ module.exports = activateBackgroundMusic =
 
   activate: (state) ->
     active = true
-    console.log("Se activo mi paquete XD")
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:toggle": => @toggle()

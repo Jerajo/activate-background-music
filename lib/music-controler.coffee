@@ -71,7 +71,6 @@ module.exports =
     @musicPlayer.previous() if @active
 
   volumeUpDown: (action) ->
-    console.log "es invocado: volumeUpDown"
     @musicPlayer.volumeUpDown action
 
   muteToggle: ->

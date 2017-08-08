@@ -11,7 +11,6 @@ module.exports =
   isMute: false
 
   disable: ->
-    console.log "es imbocado: desable"
     @musicCong.destroy()
     if @music != null and @isSetup is true
       @music.pause
@@ -48,7 +47,6 @@ module.exports =
     @musicVolumeObserver?.dispose()
     @musicVolumeObserver = atom.config.observe 'activate-background-music.playBackgroundMusic', (value) =>
       @music.volume = (@getConfig("musicVolume") * 0.01) if @music != null
-      console.log "El volumen actual es: " + @getConfig "musicVolume"
 
     @isSetup = true
 

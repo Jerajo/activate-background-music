@@ -81,7 +81,6 @@ module.exports =
     @resouses.music.play()
 
   previous: ->
-    console.log "la accion es: previous"
     isPlaying = @resouses.isPlaying
     @stop()
     maxIndex = @resouses.musicFiles.length - 1
@@ -99,7 +98,6 @@ module.exports =
     @autoPlay() if isPlaying and @getConfigActions "autoplay"
 
   next: ->
-    console.log "la accion es: next"
     isPlaying = @resouses.isPlaying
     @stop()
     maxIndex = @resouses.musicFiles.length - 1
@@ -120,15 +118,12 @@ module.exports =
     @resouses.isMute = false
     volume = @getConfig "musicVolume"
     if action is "up"
-      console.log "la accion es: volumeUp"
       volume += @getConfigActions "volumeChangeRate"
     else if action is "down"
-      console.log "la accion es: volumeDown"
       if (volume - @getConfigActions("volumeChangeRate") < 0)
         volume = 0
       else
         volume -= @getConfigActions "volumeChangeRate"
-    console.log "El volumen es: " + volume
     @setConfig("musicVolume", volume)
 
   mute: (timer = 0) ->
