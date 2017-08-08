@@ -4,14 +4,11 @@ module.exports =
     actionNextLevel: ""
     actionEndMusic: ""
     typeLapse: ""
-    lapse: 0
 
     setup: ->
       @actionDuringStreakObserver?.dispose()
-      @actionDuringStreakObserver = atom.config.observe 'activate-background-music.actions.duringStreak', (value) =>
-        @actionDuringStreak = value.action
-        @typeLapse = value.typeLapse
-        @lapse = value.lapse
+      @actionDuringStreakObserver = atom.config.observe 'activate-background-music.actions.duringStreak.action', (value) =>
+        @actionDuringStreak = value
 
       @actionEndStreakObserver?.dispose()
       @actionEndStreakObserver = atom.config.observe 'activate-background-music.actions.endStreak.action', (value) =>
@@ -36,4 +33,3 @@ module.exports =
       @actionNextLevel = ""
       @actionEndMusic = ""
       @typeLapse = ""
-      @lapse = 0

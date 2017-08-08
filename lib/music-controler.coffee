@@ -21,10 +21,8 @@ module.exports =
     @musicEnabledObserver?.dispose()
     @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (value) =>
       if value
-        console.log "Esta activado"
         @musicPlayer.setup()
       else
-        console.log "Esta desactivado"
         @disable()
 
   onInput: (cursor, screenPosition, input, data) ->
@@ -36,12 +34,10 @@ module.exports =
         n = currentLevel + 1
         mod = currentStreak % @getConfigActions "duringStreak.lapse"
         if mod is 0 or (currentStreak - n < currentStreak - mod < currentStreak)
-          console.log "actionDuringStreak:Streak"
           @musicPlayer.action("duringStreak",currentStreak)
 
       if @getConfigActions("duringStreak.typeLapse") is "time"
         if @musicPlayer.debouncedActionDuringStreak? and @musicPlayer.debouncedActionDuringStreak != null and not @musicPlayer.isPlaying
-          console.log "actionDuringStreak:Time"
           @musicPlayer.debouncedActionDuringStreak()
 
       activationThreshold = @getConfigActivatePowerMode "activationThreshold"
@@ -49,10 +45,6 @@ module.exports =
         @musicPlayer.play() if not @musicPlayer.isPlaying
 
   #onComboStartStreak: () ->
-    #combo = @api.getCombo()
-    #console.log "es imbocado: comboStartStreak " + combo.getCurrentStreak() + " " + @getConfig "activationThreshold"
-    #if combo.getCurrentStreak() >= @getConfig "activationThreshold"
-      #@musicPlayer.play combo.getCurrentStreak()
 
   onComboLevelChange: (newLvl, oldLvl) ->
     @musicPlayer.action "onNextLevel" if @active
@@ -61,8 +53,6 @@ module.exports =
     @musicPlayer.action "endStreak" if @active
     if @musicPlayer.debouncedActionDuringStreak != null
       @musicPlayer.debouncedActionDuringStreak?.cancel()
-
-  #onComboExclamation: (text) ->
 
   playPause: ->
     return @musicPlayer.pause() if @musicPlayer.isPlaying and @active

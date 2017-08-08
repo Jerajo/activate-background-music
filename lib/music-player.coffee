@@ -3,9 +3,11 @@ debounce = require "lodash.debounce"
 
 module.exports =
   resouses: resouses
-  currentMusic: 0
-  timeLapse: 0
   isPlaying: false
+  currentMusic: 0
+  typeLapse: ""
+  timeLapse: 0
+  lapse: ""
 
   disable: ->
     @resouses.disable()
@@ -13,24 +15,36 @@ module.exports =
     @actionEndMusicObserver?.dispose()
     @debouncedActionDuringStreak?.cancel()
     @debouncedActionDuringStreak = null
-    @currentMusic = 0
-    @timeLapse = 0
     @isPlaying = false
+    @currentMusic = 0
+    @typeLapse = ""
+    @timeLapse = 0
+    @lapse = ""
 
   setup: ->
     @resouses.setup()
     @lapseTypeObserver?.dispose()
-    @lapseTypeObserver = atom.config.observe 'activate-background-music.actions.duringStreak.typeLapse', (newValue, oldValue) =>
-      if @resouses.musicCong.typeLapse is "time"
-        @timeLapse = @resouses.musicCong.lapse * 1000
+    @lapseTypeObserver = atom.config.observe 'activate-background-music.actions.duringStreak.typeLapse', (value) =>
+      @typeLapse = value
+      if @typeLapse is "time"
+        @timeLapse = @lapse * 1000
         @debouncedActionDuringStreak?.cancel()
         @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
       else
         @debouncedActionDuringStreak?.cancel()
         @debouncedActionDuringStreak = null
 
+    @lapseObserver?.dispose()
+    @lapseObserver = atom.config.observe 'activate-background-music.actions.duringStreak.lapse', (value) =>
+      @lapse = value
+      if @typeLapse is "time"
+        @timeLapse = @lapse * 1000
+        @debouncedActionDuringStreak?.cancel()
+        @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
+        @debouncedActionDuringStreak() if @isPlaying
+
     @actionEndMusicObserver?.dispose()
-    @actionEndMusicObserver = atom.config.observe 'activate-background-music.actions.endMusic.action', (newValue, oldValue) =>
+    @actionEndMusicObserver = atom.config.observe 'activate-background-music.actions.endMusic.action', (value) =>
       if @resouses.musicCong.actionEndMusic != "none"
         @resouses.music.onended = =>
           @performAction @resouses.musicCong.actionEndMusic
@@ -38,7 +52,6 @@ module.exports =
         @resouses.music.onended = null
 
   play: ->
-    console.log "se invoca: play"
     @isPlaying  = @resouses.isPlaying = false if (@resouses.music.paused)
     return null if @isPlaying
 
@@ -46,12 +59,10 @@ module.exports =
     @resouses.music.play()
 
   pause: ->
-    console.log "es imbocado: music pause"
     @isPlaying  = @resouses.isPlaying = false
     @resouses.music.pause()
 
   stop: ->
-    console.log "es imbocado: stop"
     @isPlaying  = @resouses.isPlaying = false
     if @resouses.music != null
       @resouses.music.pause()
@@ -59,7 +70,6 @@ module.exports =
 
   repeat: ->
     isPlaying = @resouses.isPlaying
-    console.log "es imbocado: repead"
     @isPlaying  = @resouses.isPlaying = false
     if @resouses.music != null
       @resouses.music.pause()
@@ -67,13 +77,12 @@ module.exports =
     @autoPlay() if isPlaying and @getConfigActions "autoplay"
 
   autoPlay: ->
-    console.log "es imbocado: autoplay"
     @isPlaying  = @resouses.isPlaying = true
     @resouses.music.play()
 
   previous: ->
+    console.log "la accion es: previous"
     isPlaying = @resouses.isPlaying
-    console.log "es imbocado: previous"
     @stop()
     maxIndex = @resouses.musicFiles.length - 1
     if (@currentMusic > 0)
@@ -90,8 +99,8 @@ module.exports =
     @autoPlay() if isPlaying and @getConfigActions "autoplay"
 
   next: ->
+    console.log "la accion es: next"
     isPlaying = @resouses.isPlaying
-    console.log "es imbocado: next"
     @stop()
     maxIndex = @resouses.musicFiles.length - 1
     if (maxIndex > @currentMusic)
@@ -123,7 +132,6 @@ module.exports =
     @setConfig("musicVolume", volume)
 
   mute: (timer = 0) ->
-    console.log "es imbocado: mute"
     @resouses.isMute = !@resouses.isMute
     @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
     if timer != 0
@@ -137,9 +145,9 @@ module.exports =
       return @performAction @resouses.musicCong.actionNextLevel
 
     if name is "duringStreak"
-      if streak > 0 and @resouses.musicCong.typeLapse is "streak"
+      if streak > 0 and @typeLapse is "streak"
         return @performAction @resouses.musicCong.actionDuringStreak
-      else if streak is 0 and @resouses.musicCong.typeLapse is "time"
+      else if streak is 0 and @typeLapse is "time"
         @performAction @resouses.musicCong.actionDuringStreak
         return @debouncedActionDuringStreak()
 
