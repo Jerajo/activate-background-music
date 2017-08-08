@@ -11,23 +11,11 @@ module.exports =
         default: false
         order: 1
 
-      audioclip:
-        title: "Play Intro Audio - Audioclip"
-        description: "Which audio clip played at keystroke."
-        type: "string"
-        default: '../sounds/intro.wav'
-        enum: [
-          {value: '../sounds/intro.wav', description: 'Intro'}
-          {value: 'customAudioclip', description: 'Custom Path'}
-        ]
-        order: 2
-
-      customAudioclip:
+      audioPath:
         title: "Play Intro Audio - Path to Audioclip"
         description: "Path to audioclip played at keystroke."
         type: "string"
-        default: 'intro.wav'
-        order: 3
+        default: '../sounds/intro.wav'
 
       volume:
         title: "Play Intro Audio - Volume"
@@ -36,7 +24,6 @@ module.exports =
         default: 50
         minimum: 0
         maximum: 100
-        order: 4
 
   playBackgroundMusic:
     type: "object"

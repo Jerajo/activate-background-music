@@ -29,10 +29,9 @@ Or Settings ➔ Packages ➔ Search for `activate-background-music`
 
 ## Settings
 
-### Play Background Music
+### Play Intro Audio
 
 * **Enable/Disable**
-* Activation Threshold
 * Path to Audio
 * Volume
 
