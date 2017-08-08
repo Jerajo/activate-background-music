@@ -1,0 +1,15 @@
+{
+  "atom-workspace": {
+    "ctrl-alt-v": "activate-background-music:toggle",
+    "shift-alt-p": "activate-background-music:play/pasue",
+    "shift-alt-s": "activate-background-music:stop",
+    "shift-alt-r": "activate-background-music:repeat",
+    "ctrl-alt-m": "activate-background-music:muteToggle"
+  },
+  "atom-workspace:not([mini])": {
+    "shift-alt-right": "activate-background-music:next",
+    "shift-alt-left": "activate-background-music:previous",
+    "alt-up": "activate-background-music:volumeUp",
+    "alt-down": "activate-background-music:volumeDown"
+  }
+}

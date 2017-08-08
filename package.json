@@ -1,6 +1,6 @@
 {
 	"name": "activate-background-music",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Play backgroun music while you are in combo mode.",
 	"keywords": [
 		"activate",
@@ -19,7 +19,7 @@
 		"lodash.throttle": "^4.0.1"
 	},
 	"engines": {
-		"atom": ">=1.0.0 <2.0.0"
+		"atom": ">=1.17.0 <2.0.0"
 	},
 	"consumedServices": {
 		"activate-power-mode": {

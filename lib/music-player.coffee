@@ -1,169 +1,171 @@
-path = require "path"
-fs = require "fs"
+resouses = require "./resources"
 debounce = require "lodash.debounce"
 
 module.exports =
-  music: null
-  isPlayin: false
-  isSetup: false
-  pathtoMusic: ""
-  musicFiles: null
+  resouses: resouses
+  isPlaying: false
   currentMusic: 0
-  action: ""
-  execution: ""
-  actionLapseType: ""
-  actionLapse: 0
+  typeLapse: ""
+  timeLapse: 0
+  lapse: ""
+
+  disable: ->
+    @resouses.disable()
+    @lapseTypeObserver?.dispose()
+    @actionEndMusicObserver?.dispose()
+    @debouncedActionDuringStreak?.cancel()
+    @debouncedActionDuringStreak = null
+    @isPlaying = false
+    @currentMusic = 0
+    @typeLapse = ""
+    @timeLapse = 0
+    @lapse = ""
 
   setup: ->
-    @musicPathObserver?.dispose()
-    @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (value) =>
-      if value is "../sounds/"
-        @pathtoMusic = path.join(__dirname, value)
-      else
-        @pathtoMusic = value
-
-      @musicFiles = @getAudioFiles()
-      @music = new Audio(@pathtoMusic + @musicFiles[0])
-      @music.volume = @getConfig "musicVolume"
-
-    @musicEnabledObserver?.dispose()
-    @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (enabled) =>
-      if not enabled
-        @destroy()
-
-    @actionObserver?.dispose()
-    @actionObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.actions.command', (value) =>
-      @action = value[0]
-      @execution = value[1]
-      if @execution is "duringStreak"
-        @actionLapseType = value[2]
-        lapseValue = value.map(Number)
-        if(lapseValue[3] >= 10) and (lapseValue[3] <= 100)
-          @actionLapse = lapseValue[3]
-        else
-          @actionLapse = 10 if(lapseValue[3] < 10)
-          @actionLapse = 100 if(lapseValue[3] > 100)
-        if @actionLapseType is "time"
-          @timeLapse = @actionLapse * 1000
-          @debouncedActionDuringStreak?.cancel()
-          @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
-          @debouncedActionDuringStreakDuringStreak()
+    @resouses.setup()
+    @lapseTypeObserver?.dispose()
+    @lapseTypeObserver = atom.config.observe 'activate-background-music.actions.duringStreak.typeLapse', (value) =>
+      @typeLapse = value
+      if @typeLapse is "time"
+        @timeLapse = @lapse * 1000
+        @debouncedActionDuringStreak?.cancel()
+        @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
       else
         @debouncedActionDuringStreak?.cancel()
         @debouncedActionDuringStreak = null
-        @actionLapseType = ""
-        @actionLapse = 0
-        @music.onended = =>
-          @actionDuringStreak()
 
-    @isSetup = true
+    @lapseObserver?.dispose()
+    @lapseObserver = atom.config.observe 'activate-background-music.actions.duringStreak.lapse', (value) =>
+      @lapse = value
+      if @typeLapse is "time"
+        @timeLapse = @lapse * 1000
+        @debouncedActionDuringStreak?.cancel()
+        @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
+        @debouncedActionDuringStreak() if @isPlaying
 
-  getAudioFiles: ->
-    allFiles = fs.readdirSync(@pathtoMusic.toString())
-    file = 0
-    while(allFiles[file])
-      fileName = allFiles[file++]
-      fileExtencion = fileName.split('.').pop();
-      continue if(fileExtencion is "mp3") or (fileExtencion is "MP3")
-      continue if(fileExtencion is "wav") or (fileExtencion is "WAV")
-      continue if(fileExtencion is "3gp") or (fileExtencion is "3GP")
-      continue if(fileExtencion is "m4a") or (fileExtencion is "M4A")
-      continue if(fileExtencion is "webm") or (fileExtencion is "WEBM")
-      allFiles.splice(--file, 1)
-      break if file is allFiles.length
+    @actionEndMusicObserver?.dispose()
+    @actionEndMusicObserver = atom.config.observe 'activate-background-music.actions.endMusic.action', (value) =>
+      if @resouses.musicCong.actionEndMusic != "none"
+        @resouses.music.onended = =>
+          @performAction @resouses.musicCong.actionEndMusic
+      else
+        @resouses.music.onended = null
 
-    return allFiles
-
-  destroy: ->
-    if(@music != null) and (@isSetup is true)
-      @stop()
-      @musicPathObserver?.dispose()
-      @musicEnabledObserver?.dispose()
-      @actionObserver?.dispose()
-      @debouncedActionDuringStreak?.cancel()
-      @debouncedActionDuringStreak = null
-      @isSetup = false
-      @music = null
-      @musicFiles = null
-      isPlayin = false
-      currentMusic = 0
-
-  play: (streak) ->
-    @setup() if !@isSetup
-    if @execution is "duringStreak"
-      @actionDuringStreak(streak)
-
-    @isPlaying = false if (@music.paused)
+  play: ->
+    @isPlaying  = @resouses.isPlaying = false if (@resouses.music.paused)
     return null if @isPlaying
 
-    if @execution is "duringStreak" and @actionLapseType is "time"
-      @debouncedActionDuringStreakDuringStreak()
-
-
-    if @execution is "endMusic"
-      @music.onended = =>
-        @actionDuringStreak()
-    else
-      @music.onended = =>
-        @autoPlay()
-
-    @isPlaying = true
-    @music.play()
+    @isPlaying  = @resouses.isPlaying = true
+    @resouses.music.play()
 
   pause: ->
-    @isPlaying = false
-    @music.pause()
+    @isPlaying  = @resouses.isPlaying = false
+    @resouses.music.pause()
 
-  stop: -> #arreglar error se ejuta primero
-    @isPlaying = false
-    if @music != null
-      @music.pause()
-      @music.currentTime = 0
+  stop: ->
+    @isPlaying  = @resouses.isPlaying = false
+    if @resouses.music != null
+      @resouses.music.pause()
+      @resouses.music.currentTime = 0
+
+  repeat: ->
+    isPlaying = @resouses.isPlaying
+    @isPlaying  = @resouses.isPlaying = false
+    if @resouses.music != null
+      @resouses.music.pause()
+      @resouses.music.currentTime = 0
+    @autoPlay() if isPlaying and @getConfigActions "autoplay"
 
   autoPlay: ->
-    if @execution is "endMusic"
-      @music.onended = =>
-        @actionDuringStreak()
-    else
-      @music.onended = =>
-        @autoPlay()
+    @isPlaying  = @resouses.isPlaying = true
+    @resouses.music.play()
 
-    @isPlaying = true
-    @music.play()
+  previous: ->
+    isPlaying = @resouses.isPlaying
+    @stop()
+    maxIndex = @resouses.musicFiles.length - 1
+    if (@currentMusic > 0)
+      @currentMusic--
+    else
+      @currentMusic = maxIndex
+    @resouses.music = new Audio(@resouses.pathtoMusic + @resouses.musicFiles[@currentMusic])
+    @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
+    if @resouses.musicCong.actionEndMusic != "none"
+      @resouses.music.onended = =>
+        @performAction @resouses.musicCong.actionEndMusic
+    else
+      @resouses.music.onended = null
+    @autoPlay() if isPlaying and @getConfigActions "autoplay"
 
   next: ->
+    isPlaying = @resouses.isPlaying
     @stop()
-    maxIndex = @musicFiles.length - 1
+    maxIndex = @resouses.musicFiles.length - 1
     if (maxIndex > @currentMusic)
       @currentMusic++
     else
       @currentMusic = 0
-
-    @music = new Audio(@pathtoMusic + @musicFiles[@currentMusic])
-    @music.volume = @getConfig "musicVolume"
-
-  actionDuringStreak: (streak = 0) ->
-    if streak is 0
-      if @actionLapse != 0 and @actionLapseType is "time"
-        @stop() if @action is "repeat"
-        @next() if @action is "change"
-        @autoPlay()
-        return @debouncedActionDuringStreakDuringStreak()
-      if(@execution is "endMusic")
-        @stop() if @action is "repeat"
-        @next() if @action is "change"
-        return @autoPlay()
+    @resouses.music = new Audio(@resouses.pathtoMusic + @resouses.musicFiles[@currentMusic])
+    @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
+    if @resouses.musicCong.actionEndMusic != "none"
+      @resouses.music.onended = =>
+        @performAction @resouses.musicCong.actionEndMusic
     else
-      if(streak % @actionLapse is 0 and @actionLapseType is "streak")
-        @stop() if @action is "repeat"
-        @next() if @action is "change"
-        return @autoPlay()
+      @resouses.music.onended = null
+    @autoPlay() if isPlaying and @getConfigActions "autoplay"
 
-  actionEndStreak: ->
-    @debouncedActionDuringStreak?.cancel()
-    return @stop() if(@action is "repeat") and (@execution is "endStreak")
-    return @next() if(@action is "change")  and (@execution is "endStreak")
-    @pause()
+  volumeUpDown: (action = "") ->
+    @resouses.isMute = false
+    volume = @getConfig "musicVolume"
+    if action is "up"
+      volume += @getConfigActions "volumeChangeRate"
+    else if action is "down"
+      if (volume - @getConfigActions("volumeChangeRate") < 0)
+        volume = 0
+      else
+        volume -= @getConfigActions "volumeChangeRate"
+    @setConfig("musicVolume", volume)
+
+  mute: (timer = 0) ->
+    @resouses.isMute = !@resouses.isMute
+    @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
+    if timer != 0
+      time = timer * 1000
+      @debouncedMute?.cancel()
+      @debouncedMute = debounce @mute.bind(this), @time
+      @debouncedMute()
+
+  action: (name = "duringStreak", streak = 0) ->
+    if name is "onNextLevel"
+      return @performAction @resouses.musicCong.actionNextLevel
+
+    if name is "duringStreak"
+      if streak > 0 and @typeLapse is "streak"
+        return @performAction @resouses.musicCong.actionDuringStreak
+      else if streak is 0 and @typeLapse is "time"
+        @performAction @resouses.musicCong.actionDuringStreak
+        return @debouncedActionDuringStreak()
+
+    if name is "endStreak"
+      @pause() if @getConfigActions "endStreak.pause"
+      return @performAction @resouses.musicCong.actionEndStreak
+
+    if name is "endMusic"
+      return @performAction @resouses.musicCong.endMusic
+
+  performAction: (action) ->
+    return @play()     if action is "play"
+    return @pause()    if action is "pause"
+    return @stop()     if action is "stop"
+    return @repeat()   if action is "repeat"
+    return @previous() if action is "previous"
+    return @next()     if action is "next"
 
   getConfig: (config) ->
     atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
+
+  setConfig: (config, value) ->
+    atom.config.set("activate-background-music.playBackgroundMusic.#{config}", value)
+
+  getConfigActions: (config) ->
+    atom.config.get "activate-background-music.actions.#{config}"
