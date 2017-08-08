@@ -4,7 +4,7 @@
     "shift-alt-p": "activate-background-music:play/pasue",
     "shift-alt-s": "activate-background-music:stop",
     "shift-alt-r": "activate-background-music:repeat",
-    "ctrl-shift-m": "activate-background-music:muteToggle"
+    "ctrl-alt-m": "activate-background-music:muteToggle"
   },
   "atom-workspace:not([mini])": {
     "shift-alt-right": "activate-background-music:next",
