@@ -33,11 +33,13 @@ module.exports =
       else
         @pathtoMusic = value
 
-      @musicFiles = @getAudioFiles()
+      if fs.existsSync(@pathtoMusic)
+        @musicFiles = @getAudioFiles()
+      else
+        @musicFiles = null
 
       if @musicFiles is null
-        console.log "Note! The folder doesn't contain audio files!\nThis may cause an error."
-        console.log @musicFiles
+        console.error  "Error!: The folder doesn't exist or doesn't contain audio files!."
         @setConfig("musicPath","../sounds/musics/")
       else
         @music.pause() if @music != null and @isPlaying

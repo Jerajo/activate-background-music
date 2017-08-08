@@ -11,11 +11,5 @@
     "shift-alt-left": "activate-background-music:previous",
     "alt-up": "activate-background-music:volumeUp",
     "alt-down": "activate-background-music:volumeDown"
-  },
-  "atom-text-editor:not([mini])": {
-    "shift-alt-right": "activate-background-music:next",
-    "shift-alt-left": "activate-background-music:previous",
-    "alt-up": "activate-background-music:volumeUp",
-    "alt-down": "activate-background-music:volumeDown"
   }
 }
