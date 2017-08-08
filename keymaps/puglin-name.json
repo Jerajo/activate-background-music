@@ -6,7 +6,7 @@
     "shift-alt-r": "activate-background-music:repeat",
     "ctrl-shift-m": "activate-background-music:muteToggle"
   },
-  "atom-text-editor:not([mini])": {
+  "atom-workspace:not([mini])": {
     "shift-alt-right": "activate-background-music:next",
     "shift-alt-left": "activate-background-music:previous",
     "alt-up": "activate-background-music:volumeUp",
