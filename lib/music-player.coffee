@@ -10,6 +10,7 @@ module.exports =
   lapse: ""
 
   disable: ->
+    @stop() if @isPlaying
     @resouses.disable()
     @lapseTypeObserver?.dispose()
     @actionEndMusicObserver?.dispose()
@@ -88,7 +89,7 @@ module.exports =
       @currentMusic--
     else
       @currentMusic = maxIndex
-    @resouses.music = new Audio(@resouses.pathtoMusic + @resouses.musicFiles[@currentMusic])
+    @resouses.music = new Audio(@resouses.pathToMusic + @resouses.musicFiles[@currentMusic])
     @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
     if @resouses.musicCong.actionEndMusic != "none"
       @resouses.music.onended = =>
@@ -105,7 +106,7 @@ module.exports =
       @currentMusic++
     else
       @currentMusic = 0
-    @resouses.music = new Audio(@resouses.pathtoMusic + @resouses.musicFiles[@currentMusic])
+    @resouses.music = new Audio(@resouses.pathToMusic + @resouses.musicFiles[@currentMusic])
     @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
     if @resouses.musicCong.actionEndMusic != "none"
       @resouses.music.onended = =>
