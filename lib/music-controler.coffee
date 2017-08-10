@@ -1,9 +1,11 @@
+playIntroAudio = require "./play-intro"
 musicPlayer = require "./music-player"
 
 module.exports =
 
   active: false
   api: null
+  playIntroAudio: playIntroAudio
   musicPlayer: musicPlayer
   isCombomode: false
 
@@ -16,6 +18,7 @@ module.exports =
     @active = false
 
   setup: ->
+    @playIntroAudio.play() if @getConfig "enabled"
     @musicEnabledObserver?.dispose()
     @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (value) =>
       if value
@@ -76,7 +79,7 @@ module.exports =
     @musicPlayer.mute() if @active
 
   getConfig: (config) ->
-    atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
+    atom.config.get "activate-background-music.playIntroAudio.#{config}"
 
   getConfigActions: (config) ->
     atom.config.get "activate-background-music.actions.#{config}"

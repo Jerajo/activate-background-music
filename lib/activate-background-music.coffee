@@ -2,7 +2,6 @@
 
 configSchema = require "./config-schema"
 musiControler = require "./music-controler"
-playIntroAudio = require "./play-intro"
 
 module.exports = activateBackgroundMusic =
 
@@ -10,7 +9,6 @@ module.exports = activateBackgroundMusic =
   subscriptions: null
   active: false
   musiControler: musiControler
-  playIntroAudio: playIntroAudio
 
   activate: (state) ->
     @active = true
@@ -34,8 +32,6 @@ module.exports = activateBackgroundMusic =
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:muteToggle": ({duration}) => @musiControler.muteToggle(duration)
 
-    @playIntroAudio.play() if @getConfig "playIntroAudio.enabled"
-
     require('atom-package-deps').install('activate-background-music');
 
   consumeActivatePowerModeServiceV1: (service) ->
@@ -47,11 +43,7 @@ module.exports = activateBackgroundMusic =
   enable: ->
     @active = true
     @musiControler.setup()
-    @playIntroAudio.play() if @getConfig "playIntroAudio.enabled"
 
   disable: ->
     @active = false
     @musiControler.disable()
-
-  getConfig: (config) ->
-    atom.config.get "activate-background-music.#{config}"
