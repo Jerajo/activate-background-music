@@ -8,20 +8,19 @@ module.exports =
   isCombomode: false
 
   enable: (api) ->
-    @active = true
     @api = api
     @setup()
 
   disable: ->
     @musicPlayer.disable()
     @active = false
-    @api = null
 
   setup: ->
     @musicEnabledObserver?.dispose()
     @musicEnabledObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.enabled', (value) =>
       if value
         @musicPlayer.setup()
+        @active = true
       else
         @disable()
 
