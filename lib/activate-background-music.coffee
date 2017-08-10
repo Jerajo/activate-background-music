@@ -13,7 +13,7 @@ module.exports = activateBackgroundMusic =
   playIntroAudio: playIntroAudio
 
   activate: (state) ->
-    active = true
+    @active = true
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:toggle": => @toggle()
@@ -46,7 +46,7 @@ module.exports = activateBackgroundMusic =
 
   enable: ->
     @active = true
-    @musiControler.enable()
+    @musiControler.setup()
     @playIntroAudio.play() if @getConfig "playIntroAudio.enabled"
 
   disable: ->
