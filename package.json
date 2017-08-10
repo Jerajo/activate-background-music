@@ -1,35 +1,36 @@
 {
-  "name": "activate-background-music",
-  "version": "1.1.2",
-  "description": "A plugin for activate power mode that plays background music while you are in combo mode.",
-  "keywords": [
-    "activate",
-    "power",
-    "mode",
-    "background",
-    "music",
-    "player"
-  ],
-  "license": "MIT",
-  "author": "Jesse R. Jose <jessejose@outlook.es> (https://github.com/Jerajo)",
-  "main": "./lib/activate-background-music",
-  "repository": {
-    "url": "https://github.com/Jerajo/activate-background-music"
-  },
-  "dependencies": {
-    "lodash.debounce": "^4.0.8"
-  },
-  "engines": {
-    "atom": ">=1.17.0 <2.0.0"
-  },
-  "package-deps": [
-    "activate-power-mode"
-  ],
-  "consumedServices": {
-    "activate-power-mode": {
-      "versions": {
-        "^1.0.0": "consumeActivatePowerModeServiceV1"
-      }
-    }
-  }
+	"name": "activate-background-music",
+	"version": "1.1.2",
+	"description": "A plugin for activate power mode that plays background music while you are in combo mode.",
+	"keywords": [
+		"activate",
+		"power",
+		"mode",
+		"background",
+		"music",
+		"player"
+	],
+	"license": "MIT",
+	"author": "Jesse R. Jose <jessejose@outlook.es> (https://github.com/Jerajo)",
+	"main": "./lib/activate-background-music",
+	"repository": {
+		"url": "https://github.com/Jerajo/activate-background-music"
+	},
+	"dependencies": {
+		"atom-package-deps": "^4.6.0",
+		"lodash.debounce": "^4.0.8"
+	},
+	"engines": {
+		"atom": ">=1.17.0 <2.0.0"
+	},
+	"package-deps": [
+		"activate-power-mode"
+	],
+	"consumedServices": {
+		"activate-power-mode": {
+			"versions": {
+				"^1.0.0": "consumeActivatePowerModeServiceV1"
+			}
+		}
+	}
 }

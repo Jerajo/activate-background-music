@@ -36,7 +36,7 @@ module.exports = activateBackgroundMusic =
 
     @playIntroAudio.play() if @getConfig "playIntroAudio.enabled"
 
-    #require('atom-package-deps').install('activate-background-music');
+    require('atom-package-deps').install('activate-background-music');
 
   consumeActivatePowerModeServiceV1: (service) ->
     service.registerPlugin('activateBackgroundMusic', @musiControler)
