@@ -1,3 +1,9 @@
+## 1.1.1 - Parch 01
+* default setting changed
+* @pathToMusic fixed on resources.coffee
+* package description changed
+* readme changed
+
 ## 1.0.0 - First Release
 * Play intro audio added
 * Path to intro audio
@@ -10,7 +16,7 @@
 * Auto-play after actions execution added
 * Action during streak added
 * Execution lapse for action during streak added
-* Type of lapse time/streak added
+* Lapse type time/streak added
 * Action when streak ends added
 * Pause the music when streak ends added
 * Action on next level added
