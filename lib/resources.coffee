@@ -16,7 +16,7 @@ module.exports =
       @music.pause
       @musicPathObserver?.dispose()
       @musicVolumeObserver?.dispose()
-      pathtoMusic: ""
+      @pathToMusic = ""
       @isSetup = false
       @music = null
       @musicFiles = null
@@ -29,11 +29,11 @@ module.exports =
     @musicPathObserver?.dispose()
     @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.musicPath', (value) =>
       if value is "../sounds/musics/"
-        @pathtoMusic = path.join(__dirname, value)
+        @pathToMusic = path.join(__dirname, value)
       else
-        @pathtoMusic = value
+        @pathToMusic = value
 
-      if fs.existsSync(@pathtoMusic)
+      if fs.existsSync(@pathToMusic)
         @musicFiles = @getAudioFiles()
       else
         @musicFiles = null
@@ -43,7 +43,7 @@ module.exports =
         @setConfig("musicPath","../sounds/musics/")
       else
         @music.pause() if @music != null and @isPlaying
-        @music = new Audio(@pathtoMusic + @musicFiles[0])
+        @music = new Audio(@pathToMusic + @musicFiles[0])
         @music.volume = if @isMute then 0 else (@getConfig("musicVolume") * 0.01)
 
     @musicVolumeObserver?.dispose()
@@ -53,7 +53,7 @@ module.exports =
     @isSetup = true
 
   getAudioFiles: ->
-    allFiles = fs.readdirSync(@pathtoMusic)
+    allFiles = fs.readdirSync(@pathToMusic)
     file = 0
     while(allFiles[file])
       fileName = allFiles[file++]
