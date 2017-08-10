@@ -2,13 +2,12 @@ module.exports =
 
   playIntroAudio:
     type: "object"
-    order: 2
     properties:
       enabled:
         title: "Play Intro Audio - Enabled"
         description: "Play audio clip on/off."
         type: "boolean"
-        default: false
+        default: true
         order: 1
 
       audioPath:
@@ -71,7 +70,7 @@ module.exports =
             title: "Music Player - Action During Streak"
             description: "Action executed during streak."
             type: "string"
-            default: 'none'
+            default: 'next'
             enum: [
               {value: 'none', description: 'None'}
               {value: 'play', description: 'Play Music'}
@@ -118,7 +117,7 @@ module.exports =
             title: "Music Player - Action On Streak End"
             description: "Action executed when the combo streak ends."
             type: "string"
-            default: 'none'
+            default: 'repeat'
             enum: [
               {value: 'none', description: 'None'}
               {value: 'stop', description: 'Stop Music'}
@@ -136,7 +135,7 @@ module.exports =
             title: "Music Player - Action On Next Level"
             description: "Action executed when the combo level changes."
             type: "string"
-            default: 'next'
+            default: 'none'
             enum: [
               {value: 'none', description: 'None'}
               {value: 'play', description: 'Play Music'}
@@ -155,7 +154,7 @@ module.exports =
             title: "Music Player - Action On Music End"
             description: "Action executed when music ends."
             type: "string"
-            default: 'repeat'
+            default: 'next'
             enum: [
               {value: 'none', description: 'None'}
               {value: 'play', description: 'Play Music'}
