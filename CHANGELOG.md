@@ -1,4 +1,4 @@
-## 1.1.1 - Parch 01
+## 1.1.1 - Patch 01
 * default setting changed
 * @pathToMusic fixed on resources.coffee
 * package description changed
