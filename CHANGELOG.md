@@ -1,4 +1,4 @@
-## 1.1.1 - Patch 02
+## 1.1.3 - Patch 02
 * package-dep fixed
 
 ## 1.1.2 - Patch 01
