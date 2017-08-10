@@ -1,10 +1,13 @@
-## 1.1.1 - Patch 01
+## 1.1.1 - Patch 02
+* package-dep fixed
+
+## 1.1.2 - Patch 01
 * default setting changed
 * @pathToMusic fixed on resources.coffee
 * package description changed
 * readme changed
 
-## 1.0.0 - First Release
+## 1.1.0 - First Release
 * Play intro audio added
 * Path to intro audio
 * Intro audio volume added
