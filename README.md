@@ -1,4 +1,4 @@
-# [activate-background-music Beta](https://github.com/Jerajo/activate-background-music)
+# [Activate Background Music](https://github.com/Jerajo/activate-background-music)
 
 <iframe width="560" height="315"
 src="https://www.youtube.com/embed/fBr48lHVYJE" frameborder="0" allowfullscreen>
