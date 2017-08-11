@@ -1,9 +1,6 @@
 # [Activate Background Music](https://github.com/Jerajo/activate-background-music)
 
-<iframe width="560" height="315"
-src="https://www.youtube.com/embed/fBr48lHVYJE" frameborder="0" allowfullscreen>
-</iframe>
-
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lRAu6ZpLEJI?ecver=1" frameborder="0" allowfullscreen></iframe>
 
 #### This is an extension package for activate-power-mode that allow you to listen your favorite music while you are on Combo Mode.
 
@@ -13,9 +10,9 @@ Needs Activate-Power-Mode package installed.
 
 ## Usage
 
-- Activate with <kbd>Ctrl</kbd>-<kbd>Alt</kbd>-<kbd>M</kbd> or through the command panel with `Activate Power Mode Background Music: Toggle`. Use the command again to deactivate.
+- Activate with <kbd>Alt</kbd>-<kbd>A</kbd> or through the command panel with `Activate Background Music: Toggle`. Use the command again to deactivate.
 
-- or activate by going settings/packages/activate-background-music/enable
+- or activate by going `settings/packages/activate-background-music/enable`
 
 **IMPORTANT: When `Background Music` is enabled, music won't play until you reach the activation threshold on activate-power-mode settings.**
 
@@ -35,7 +32,7 @@ Or Settings ➔ Packages ➔ Search for `activate-background-music`
 * Path to Audio
 * Volume
 
-### Play Background Music - Action
+### Play Background Music - Actions
 
 <table class="Actions" style="text-align:center">
 
@@ -67,7 +64,7 @@ Or Settings ➔ Packages ➔ Search for `activate-background-music`
 
   <tr>  <th>SHORTCUT</th> <th>NAME</th> <th>DESCRIPTION</th>  </tr>
 
-  <tr>  <td>ctrl-alt-v</td> <td>Toggle</td> <td>Enable/Disable the plugin</td>  </tr>
+  <tr>  <td>alt-a</td> <td>Toggle</td> <td>Enable/Disable the plugin</td>  </tr>
 
   <tr>  <td>shift-alt-p</td> <td>Play/Pasue (Toggle)</td> <td>Play/Pause the music</td>  </tr>
 
@@ -75,11 +72,11 @@ Or Settings ➔ Packages ➔ Search for `activate-background-music`
 
   <tr>  <td>shift-alt-r</td> <td>Repeat</td> <td>Repeat the music</td>  </tr>
 
-  <tr>  <td>ctrl-shift-m</td> <td>Mute (Toggle)</td> <td>Mute (Toggle) On/Off</td>  </tr>
+  <tr>  <td>shift-alt-m</td> <td>Mute (Toggle)</td> <td>Mute (Toggle) On/Off</td>  </tr>
 
-  <tr>  <td>shift-alt-right</td> <td>Next</td> <td>Switch to the next music</td>  </tr>
+  <tr>  <td>alt-right</td> <td>Next</td> <td>Switch to the next music</td>  </tr>
 
-  <tr>  <td>shift-alt-left</td> <td>Previous</td> <td>Switch to the previous music</td>  </tr>
+  <tr>  <td>alt-left</td> <td>Previous</td> <td>Switch to the previous music</td>  </tr>
 
   <tr>  <td>alt-up</td> <td>VolumeUp</td> <td>Turn up the music</td>  </tr>
 
