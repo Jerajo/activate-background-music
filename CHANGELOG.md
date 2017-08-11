@@ -1,3 +1,16 @@
+## 1.2.0 - Patch 03
+* Now the intro sound plays each time `A-P-M` is activated
+* Toggle command fixed
+* Music keep playing when disabled fixed
+* actions: next and previous fixed
+* error `getCombo()` undefined fixed
+* Toggle shortcut changed to `alt-a`
+* Mute shortcut changed to `shift-alt-m`
+* Next shortcut changed to `alt-left`
+* Previous shortcut changed to `alt-right`
+* README.md changed
+* New Youtube video added
+
 ## 1.1.3 - Patch 02
 * package-dep fixed
 
