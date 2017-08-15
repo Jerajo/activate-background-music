@@ -37,6 +37,11 @@ module.exports = activateBackgroundMusic =
   consumeActivatePowerModeServiceV1: (service) ->
     service.registerPlugin('activateBackgroundMusic', @musiControler)
 
+  deactivate: ->
+    @subscriptions?.dispose()
+    @active = false
+    @musiControler.disable()
+
   toggle: ->
     if @active then @disable() else @enable()
 
