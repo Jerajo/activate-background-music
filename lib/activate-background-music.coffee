@@ -1,54 +1,58 @@
 {CompositeDisposable} = require "atom"
 
 configSchema = require "./config-schema"
-musiControler = require "./music-controler"
+backgroundMusic = require "./background-music"
 
 module.exports = activateBackgroundMusic =
 
   config: configSchema
   subscriptions: null
   active: false
-  musiControler: musiControler
+  backgroundMusic: backgroundMusic
 
   activate: (state) ->
-    @active = true
+    @active = @setConfig(true) if !@isActive()
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:toggle": => @toggle()
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:play/pasue": => @musiControler.playPause()
+      "activate-background-music:play/pasue": => @backgroundMusic.playPause()
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:stop": => @musiControler.stop()
+      "activate-background-music:stop": => @backgroundMusic.stop()
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:repeat": => @musiControler.repeat()
+      "activate-background-music:repeat": => @backgroundMusic.repeat()
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:next": => @musiControler.next()
+      "activate-background-music:next": => @backgroundMusic.next()
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:previous": => @musiControler.previous()
+      "activate-background-music:previous": => @backgroundMusic.previous()
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:volumeUp": => @musiControler.volumeUpDown("up")
+      "activate-background-music:volumeUp": => @backgroundMusic.volumeUpDown("up")
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:volumeDown": => @musiControler.volumeUpDown("down")
+      "activate-background-music:volumeDown": => @backgroundMusic.volumeUpDown("down")
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:muteToggle": ({duration}) => @musiControler.muteToggle(duration)
+      "activate-background-music:muteToggle": ({duration}) => @backgroundMusic.muteToggle(duration)
 
     require('atom-package-deps').install('activate-background-music');
 
   consumeActivatePowerModeServiceV1: (service) ->
-    service.registerPlugin('activateBackgroundMusic', @musiControler)
+    service.registerPlugin('activateBackgroundMusic', @backgroundMusic)
 
   deactivate: ->
     @subscriptions?.dispose()
-    @active = false
-    @musiControler.disable()
+    @active = @setConfig(false) if @isActive()
 
   toggle: ->
-    if @active then @disable() else @enable()
+    if @isActive() then @disable() else @enable()
 
   enable: ->
-    @active = true
-    @musiControler.setup()
+    @active = @setConfig(true)
 
   disable: ->
-    @active = false
-    @musiControler.disable()
+    @active = @setConfig(false)
+
+  isActive: ->
+    atom.config.get "activate-power-mode.plugins.activateBackgroundMusic"
+
+  setConfig: (value) ->
+    atom.config.set "activate-power-mode.plugins.activateBackgroundMusic", value
+    value
