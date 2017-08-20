@@ -3,6 +3,10 @@ musicPlayer = require "./music-player"
 
 module.exports =
 
+  title: 'Play Background Music'
+  description: 'A plugin for activate power mode that plays background music while you are in combo mode.'
+  name: "activate-background-music"
+  type: "package"
   active: false
   api: null
   playIntroAudio: playIntroAudio
