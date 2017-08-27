@@ -31,7 +31,9 @@ module.exports =
       if value is "../sounds/musics/"
         @pathToMusic = path.join(__dirname, value)
       else
-        @pathToMusic = value
+        if value[value.length-1] != '/' or value[value.length-1] != '\\'
+          @pathToMusic = value + '/'
+        else @pathToMusic = value
 
       if fs.existsSync(@pathToMusic)
         @musicFiles = @getAudioFiles()
