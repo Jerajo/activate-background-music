@@ -16,7 +16,7 @@ module.exports = activateBackgroundMusic =
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:toggle": => @toggle()
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:play/pasue": => @backgroundMusic.playPause()
+      "activate-background-music:play/pause": => @backgroundMusic.playPause()
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:stop": => @backgroundMusic.stop()
     @subscriptions.add atom.commands.add "atom-workspace",
@@ -30,12 +30,12 @@ module.exports = activateBackgroundMusic =
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:volumeDown": => @backgroundMusic.volumeUpDown("down")
     @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:muteToggle": ({duration}) => @backgroundMusic.muteToggle(duration)
+      "activate-background-music:mute-toggle": => @backgroundMusic.muteToggle()
 
     require('atom-package-deps').install('activate-background-music');
 
   consumeActivatePowerModeServiceV1: (service) ->
-    service.registerPlugin('activateBackgroundMusic', @backgroundMusic)
+    service.registerPlugin('backgroundMusic', @backgroundMusic)
 
   deactivate: ->
     @subscriptions?.dispose()
@@ -51,8 +51,8 @@ module.exports = activateBackgroundMusic =
     @active = @setConfig(false)
 
   isActive: ->
-    atom.config.get "activate-power-mode.plugins.activateBackgroundMusic"
+    atom.config.get "activate-power-mode.plugins.backgroundMusic"
 
   setConfig: (value) ->
-    atom.config.set "activate-power-mode.plugins.activateBackgroundMusic", value
+    atom.config.set "activate-power-mode.plugins.backgroundMusic", value
     value
