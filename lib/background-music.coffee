@@ -7,23 +7,25 @@ module.exports =
   description: 'A plugin for activate power mode that plays background music while you are in combo mode.'
   name: "activate-background-music"
   type: "package"
-  active: false
-  api: null
   playIntroAudio: playIntroAudio
   musicPlayer: musicPlayer
+  api: null
   isCombomode: false
+  activationThreshold: null
 
   enable: (api) ->
-    @active = true
     @api = api
     @setup()
 
   disable: ->
-    @active = false
     @musicPlayer.disable()
+    api = null
+    isCombomode = false
+    activationThreshold = null
 
   setup: ->
-    @playIntroAudio.play() if @getConfig "enabled"
+    @activationThreshold = atom.config.get "activate-power-mode.comboMode.activationThreshold"
+    @playIntroAudio.play()
     @musicPlayer.setup()
 
   onInput: (cursor, screenPosition, input, data) ->
@@ -40,8 +42,7 @@ module.exports =
       if @musicPlayer.debouncedActionDuringStreak? and @musicPlayer.debouncedActionDuringStreak != null and not @musicPlayer.isPlaying
         @musicPlayer.debouncedActionDuringStreak()
 
-    activationThreshold = @getConfigActivatePowerMode "activationThreshold"
-    if currentStreak >= activationThreshold[0]
+    if currentStreak >= @activationThreshold[0]
       @musicPlayer.play() if not @musicPlayer.isPlaying
 
   onComboLevelChange: (newLvl, oldLvl) ->
@@ -54,31 +55,25 @@ module.exports =
 
   playPause: ->
     return @musicPlayer.pause() if @musicPlayer.isPlaying and @active
-    return @musicPlayer.play() if @active
+    return @musicPlayer.play()
 
   stop: ->
     @musicPlayer.stop() if @musicPlayer.isPlaying and @active
 
   repeat: ->
-    @musicPlayer.repeat() if @active
+    @musicPlayer.repeat()
 
   next: ->
-    @musicPlayer.next() if @active
+    @musicPlayer.next()
 
   previous: ->
-    @musicPlayer.previous() if @active
+    @musicPlayer.previous()
 
   volumeUpDown: (action) ->
-    @musicPlayer.volumeUpDown action if @active
+    @musicPlayer.volumeUpDown action
 
   muteToggle: ->
-    @musicPlayer.mute() if @active
-
-  getConfig: (config) ->
-    atom.config.get "activate-background-music.playIntroAudio.#{config}"
+    @musicPlayer.mute()
 
   getConfigActions: (config) ->
     atom.config.get "activate-background-music.actions.#{config}"
-
-  getConfigActivatePowerMode: (config) ->
-    atom.config.get "activate-power-mode.comboMode.#{config}"
