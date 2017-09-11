@@ -1,5 +1,17 @@
+## 1.3.0 - Release 1.3.0
+* Memory consumed reduced
+* Performance update
+* `config-schema.coffee` updated
+* Observers reduced
+* `resourses.coffee` removed
+* Pause command fixed
+* Descriptions added
+* Path allow '/' and '\' at the end
+* Actions when music ends fixed
+* `@debouncedActionDuringStreak` updated
+
 ## 1.2.0 - Patch 03
-* Now the intro sound plays each time `A-P-M` is activated
+* Now the intro sound plays each time `A-P-M` gets active
 * Toggle command fixed
 * Music keep playing when disabled fixed
 * actions: next and previous fixed
@@ -9,14 +21,14 @@
 * Next shortcut changed to `alt-left`
 * Previous shortcut changed to `alt-right`
 * README.md changed
-* New Youtube video added
+* New YouTube video added
 
 ## 1.1.3 - Patch 02
-* package-dep fixed
+* `package-dep` fixed
 
 ## 1.1.2 - Patch 01
 * default setting changed
-* @pathToMusic fixed on resources.coffee
+* `@pathToMusic` fixed on `resources.coffee`
 * package description changed
 * readme changed
 
