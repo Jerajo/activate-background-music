@@ -108,6 +108,7 @@ module.exports =
 
   autoPlay: ->
     @music['file'].play()
+    @music['isPlaying'] = true
 
   previous: (conf) ->
     @changeMusic(-1, conf)
