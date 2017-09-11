@@ -16,7 +16,6 @@ module.exports =
     @debouncedActionDuringStreak = null
     @musicVolumeObserver?.dispose()
     @musicPathObserver?.dispose()
-    @music['file'] = null
     @music = null
     @musicFiles = null
     @currentMusic = 0
