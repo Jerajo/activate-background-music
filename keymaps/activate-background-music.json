@@ -1,10 +1,10 @@
 {
   "atom-workspace": {
     "alt-a": "activate-background-music:toggle",
-    "shift-alt-p": "activate-background-music:play/pasue",
+    "shift-alt-p": "activate-background-music:play/pause",
     "shift-alt-s": "activate-background-music:stop",
     "shift-alt-r": "activate-background-music:repeat",
-    "shift-alt-m": "activate-background-music:muteToggle",
+    "shift-alt-m": "activate-background-music:mute-toggle",
     "alt-right": "activate-background-music:next",
     "alt-left": "activate-background-music:previous",
     "alt-up": "activate-background-music:volumeUp",

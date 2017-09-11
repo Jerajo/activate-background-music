@@ -20,7 +20,7 @@
             },
             {
               "label": "Play / Pasue (Toggle)",
-              "command": "activate-background-music:play/pasue"
+              "command": "activate-background-music:play/pause"
             },
             {
               "label": "Stop",
@@ -48,7 +48,7 @@
             },
             {
               "label": "Mute (Toggle)",
-              "command": "activate-background-music:muteToggle"
+              "command": "activate-background-music:mute-toggle"
             }
           ]
         }

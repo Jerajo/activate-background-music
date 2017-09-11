@@ -1,35 +1,30 @@
 module.exports =
-  actionDuringStreak: ""
-  actionEndStreak: ""
-  actionNextLevel: ""
-  actionEndMusic: ""
-  typeLapse: ""
+  conf: []
 
   setup: ->
-    @actionDuringStreakObserver?.dispose()
-    @actionDuringStreakObserver = atom.config.observe 'activate-background-music.actions.duringStreak.action', (value) =>
-      @actionDuringStreak = value
+    @subscriptions = new CompositeDisposable
 
-    @actionEndStreakObserver?.dispose()
-    @actionEndStreakObserver = atom.config.observe 'activate-background-music.actions.endStreak.action', (value) =>
-      @actionEndStreak = value
+    @observe "actions.duringStreak.action",   "duringStreak"
+    @observe "actions.duringStreak.typeLapse","typeLapse"
+    @observe "actions.duringStreak.lapse",    "lapse"
+    @observe "actions.endStreak.action",      "endStreak"
+    @observe "actions.endStreak.pause",       "pause"
+    @observe "actions.endMusic.action",       "endMusic"
+    @observe "actions.nextLevel.action",      "onNextLevel"
+    @observe "actions.autoplay",              "autoplay"
+    @observe "actions.volumeChangeRate",      "volumeChangeRate"
 
-    @actionNextLevelObserver?.dispose()
-    @actionNextLevelObserver = atom.config.observe 'activate-background-music.actions.nextLevel.action', (value) =>
-      @actionNextLevel = value
+    @subscriptions.add atom.config.observe(
+      "activate-power-mode.comboMode.activationThreshold", (value) =>
+        @conf['activationThreshold'] = value[0]
+    )
 
-    @actionEndMusicObserver?.dispose()
-    @actionEndMusicObserver = atom.config.observe 'activate-background-music.actions.endMusic.action', (value) =>
-      @actionEndMusic = value
+  observe: (path, key) ->
+    @subscriptions.add atom.config.observe(
+      "activate-background-music.#{path}", (value) =>
+        @conf[key] = value
+    )
 
   destroy: ->
-    @actionDuringStreakObserver?.dispose()
-    @actionEndStreakObserver?.dispose()
-    @actionNextLevelObserver?.dispose()
-    @actionEndMusicObserver?.dispose()
-    @pathtoMusic = ""
-    @actionDuringStreak = ""
-    @actionEndStreak = ""
-    @actionNextLevel = ""
-    @actionEndMusic = ""
-    @typeLapse = ""
+    @subscriptions?.dispose()
+    @conf = null

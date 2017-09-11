@@ -28,36 +28,27 @@ module.exports =
     type: "object"
     order: 3
     properties:
-      enabled:
-        title: "Background Music - Enabled"
-        description: "Play Background Music on/off."
-        type: "boolean"
-        default: true
-        order: 1
-
-      musicPath:
+      path:
         title: "Background Music - Path to Audio"
         description: "Path to Music Tracks played in combo Mode."
         type: "string"
         default: '../sounds/musics/'
-        order: 2
 
-      musicVolume:
+      volume:
         title: "Background Music - Volume"
         description: "Volume of the Music Track played in combo Mode."
         type: "integer"
         default: 50
         minimum: 0
         maximum: 100
-        order: 3
 
   actions:
     order: 4
     type: "object"
     properties:
       autoplay:
-        title: "Music Player - Actions - Auto-play"
-        description: "Auto play the music after the action execution, wont apply on stop and pause actions. If pause option is enabled on action streak ends this setting won't apply on that event."
+        title: "Actions - Autoplay"
+        description: "Autoplay the music after the action execution, wont apply on stop and pause actions. If pause option is enabled on action streak ends this setting won't apply on that event."
         type: "boolean"
         default: true
         order: 1
@@ -67,7 +58,7 @@ module.exports =
         type: "object"
         properties:
           action:
-            title: "Music Player - Action During Streak"
+            title: "Action During Streak"
             description: "Action executed during streak."
             type: "string"
             default: 'next'
@@ -83,7 +74,7 @@ module.exports =
             order: 1
 
           typeLapse:
-            title: "Music Player - Action During Streak - Type of Lapse"
+            title: "Action During Streak - Type of Lapse"
             description: "Type of lapse used for the action during streak."
             type: "string"
             default: 'streak'
@@ -94,7 +85,7 @@ module.exports =
             order: 2
 
           lapse:
-            title: "Music Player - Action During Streak - Lapse"
+            title: "Action During Streak - Lapse"
             description: "Lapse for acion execution on streaks or seconds."
             type: "number"
             default: 1000
@@ -107,14 +98,14 @@ module.exports =
         type: "object"
         properties:
           pause:
-            title: "Music Player - Action On Streak End - Pause"
+            title: "Action On Streak End - Pause"
             description: "Pause the music when streak ends."
             type: "boolean"
             default: true
             order: 1
 
           action:
-            title: "Music Player - Action On Streak End"
+            title: "Action On Streak End"
             description: "Action executed when the combo streak ends."
             type: "string"
             default: 'repeat'
@@ -132,7 +123,7 @@ module.exports =
         type: "object"
         properties:
           action:
-            title: "Music Player - Action On Next Level"
+            title: "Action On Next Level"
             description: "Action executed when the combo level changes."
             type: "string"
             default: 'none'
@@ -151,7 +142,7 @@ module.exports =
         type: "object"
         properties:
           action:
-            title: "Music Player - Action On Music End"
+            title: "Action On Music End"
             description: "Action executed when music ends."
             type: "string"
             default: 'next'
@@ -164,7 +155,7 @@ module.exports =
             ]
 
       volumeChangeRate:
-        title: "Music Player - Volume Change Rate"
+        title: "Volume Change Rate"
         description: "Change Rate for Volume Up and Down actions."
         type: "integer"
         default: 10
