@@ -28,13 +28,13 @@ module.exports =
     type: "object"
     order: 3
     properties:
-      musicPath:
+      path:
         title: "Background Music - Path to Audio"
         description: "Path to Music Tracks played in combo Mode."
         type: "string"
         default: '../sounds/musics/'
 
-      musicVolume:
+      volume:
         title: "Background Music - Volume"
         description: "Volume of the Music Track played in combo Mode."
         type: "integer"
@@ -47,8 +47,8 @@ module.exports =
     type: "object"
     properties:
       autoplay:
-        title: "Actions - Auto-play"
-        description: "Auto play the music after the action execution, wont apply on stop and pause actions. If pause option is enabled on action streak ends this setting won't apply on that event."
+        title: "Actions - Autoplay"
+        description: "Autoplay the music after the action execution, wont apply on stop and pause actions. If pause option is enabled on action streak ends this setting won't apply on that event."
         type: "boolean"
         default: true
         order: 1

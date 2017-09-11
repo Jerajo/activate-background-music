@@ -1,172 +1,176 @@
-resouses = require "./resources"
 debounce = require "lodash.debounce"
+path = require "path"
+fs = require "fs"
 
 module.exports =
-  resouses: resouses
-  isPlaying: false
+  audio: null
+  music: []
+  musicFiles: []
   currentMusic: 0
-  typeLapse: ""
-  timeLapse: 0
-  lapse: ""
 
   disable: ->
-    @stop() if @isPlaying
-    @resouses.disable()
+    @stop() if @music['isPlaying']
     @lapseTypeObserver?.dispose()
     @actionEndMusicObserver?.dispose()
     @debouncedActionDuringStreak?.cancel()
     @debouncedActionDuringStreak = null
-    @isPlaying = false
+    @musicVolumeObserver?.dispose()
+    @musicPathObserver?.dispose()
+    @music['file'] = null
+    @music = null
+    @musicFiles = null
     @currentMusic = 0
-    @typeLapse = ""
-    @timeLapse = 0
-    @lapse = ""
 
-  setup: ->
-    @resouses.setup()
+  setup: (conf) ->
+    @music['isMute'] = false
+    @music['isPlaying'] = false
+
+    @musicVolumeObserver?.dispose()
+    @musicVolumeObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.volume', (volume) =>
+      @music['volume'] = (volume * 0.01)
+      @music['file'].volume = @music['volume'] if @music['file'] != undefined
+
+    @musicPathObserver?.dispose()
+    @musicPathObserver = atom.config.observe 'activate-background-music.playBackgroundMusic.path', (value) =>
+      mPath = value
+      if mPath is "../sounds/musics/"
+        @music['path'] = path.join(__dirname, mPath)
+      else
+        if mPath[mPath.length-1] != '/' or mPath[mPath.length-1] != '\\'
+          @music['path'] = mPath + '\\'
+        else if mPath[mPath.length-1] is '/'
+          @music['path'] = mPath.replace('/','\\')
+        else @music['path'] = mPath
+
+      if fs.existsSync(@music['path'])
+        @musicFiles = @getAudioFiles()
+        @currentMusic = 0
+        @setMusic(conf)
+      else
+        @musicFiles = null
+        console.error  "Error!: The folder doesn't exist or doesn't contain audio files!."
+        @setConfig("musicPath","../sounds/musics/")
+
+    @actionEndMusicObserver?.dispose()
+    @actionEndMusicObserver = atom.config.observe 'activate-background-music.actions.endMusic.action', (value) =>
+      @action('endMusic', conf)
+
     @lapseTypeObserver?.dispose()
-    @lapseTypeObserver = atom.config.observe 'activate-background-music.actions.duringStreak.typeLapse', (value) =>
-      @typeLapse = value
-      if @typeLapse is "time"
-        @timeLapse = @lapse * 1000
+    @lapseTypeObserver = atom.config.observe 'activate-background-music.actions.duringStreak', (value) =>
+      if value.typeLapse is "time"
+        timeLapse = (value.lapse * 1000)
         @debouncedActionDuringStreak?.cancel()
-        @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
+        @debouncedActionDuringStreak = debounce @action.bind(this), timeLapse
+        @debouncedActionDuringStreak('duringStreak', conf) if @music['isPlaying']
       else
         @debouncedActionDuringStreak?.cancel()
         @debouncedActionDuringStreak = null
 
-    @lapseObserver?.dispose()
-    @lapseObserver = atom.config.observe 'activate-background-music.actions.duringStreak.lapse', (value) =>
-      @lapse = value
-      if @typeLapse is "time"
-        @timeLapse = @lapse * 1000
-        @debouncedActionDuringStreak?.cancel()
-        @debouncedActionDuringStreak = debounce @action.bind(this), @timeLapse
-        @debouncedActionDuringStreak() if @isPlaying
+  getAudioFiles: ->
+    allFiles = fs.readdirSync(@music['path'])
+    file = 0
+    while(allFiles[file])
+      fileName = allFiles[file++]
+      fileExtencion = fileName.split('.').pop()
+      continue if(fileExtencion is "mp3") or (fileExtencion is "MP3")
+      continue if(fileExtencion is "wav") or (fileExtencion is "WAV")
+      continue if(fileExtencion is "3gp") or (fileExtencion is "3GP")
+      continue if(fileExtencion is "m4a") or (fileExtencion is "M4A")
+      continue if(fileExtencion is "webm") or (fileExtencion is "WEBM")
+      allFiles.splice(--file, 1)
+      break if file is allFiles.length
 
-    @actionEndMusicObserver?.dispose()
-    @actionEndMusicObserver = atom.config.observe 'activate-background-music.actions.endMusic.action', (value) =>
-      if @resouses.musicCong.actionEndMusic != "none"
-        @resouses.music.onended = =>
-          @performAction @resouses.musicCong.actionEndMusic
-      else
-        @resouses.music.onended = null
+    return if (allFiles.length > 0) then allFiles else null
+
+  setMusic: (conf) ->
+    @music['file'].pause() if @music['file'] != undefined and @music['isPlaying']
+    @music['file'] = new Audio(@music['path'] + @musicFiles[@currentMusic])
+    @music['file'].volume = if @music['isMute'] then 0 else @music['volume']
+    @action('endMusic', conf)
 
   play: ->
-    @isPlaying  = @resouses.isPlaying = false if (@resouses.music.paused)
-    return null if @isPlaying
-
-    @isPlaying  = @resouses.isPlaying = true
-    @resouses.music.play()
+    return null if !@music['file'].paused
+    @music['file'].play()
+    @music['isPlaying'] = true
 
   pause: ->
-    @isPlaying  = @resouses.isPlaying = false
-    @resouses.music.pause()
+    @music['file'].pause()
+    @music['isPlaying'] = false
 
   stop: ->
-    @isPlaying  = @resouses.isPlaying = false
-    if @resouses.music != null
-      @resouses.music.pause()
-      @resouses.music.currentTime = 0
+    @music['file'].pause()
+    @music['isPlaying'] = false
+    @music['file'].currentTime = 0
 
-  repeat: ->
-    isPlaying = @resouses.isPlaying
-    @isPlaying  = @resouses.isPlaying = false
-    if @resouses.music != null
-      @resouses.music.pause()
-      @resouses.music.currentTime = 0
-    @autoPlay() if isPlaying and @getConfigActions "autoplay"
+  repeat: (conf) ->
+    isPlaying = @music['isPlaying']
+    @stop()
+    @autoPlay() if isPlaying and conf['autoplay']
 
   autoPlay: ->
-    @isPlaying  = @resouses.isPlaying = true
-    @resouses.music.play()
+    @music['file'].play()
 
-  previous: ->
-    isPlaying = @resouses.isPlaying
-    @stop()
-    maxIndex = @resouses.musicFiles.length - 1
-    if (@currentMusic > 0)
-      @currentMusic--
-    else
-      @currentMusic = maxIndex
-    @resouses.music = new Audio(@resouses.pathToMusic + @resouses.musicFiles[@currentMusic])
-    @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
-    if @resouses.musicCong.actionEndMusic != "none"
-      @resouses.music.onended = =>
-        @performAction @resouses.musicCong.actionEndMusic
-    else
-      @resouses.music.onended = null
-    @autoPlay() if isPlaying and @getConfigActions "autoplay"
+  previous: (conf) ->
+    @changeMusic(-1, conf)
 
-  next: ->
-    isPlaying = @resouses.isPlaying
-    @stop()
-    maxIndex = @resouses.musicFiles.length - 1
-    if (maxIndex > @currentMusic)
-      @currentMusic++
-    else
-      @currentMusic = 0
-    @resouses.music = new Audio(@resouses.pathToMusic + @resouses.musicFiles[@currentMusic])
-    @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
-    if @resouses.musicCong.actionEndMusic != "none"
-      @resouses.music.onended = =>
-        @performAction @resouses.musicCong.actionEndMusic
-    else
-      @resouses.music.onended = null
-    @autoPlay() if isPlaying and @getConfigActions "autoplay"
+  next: (conf) ->
+    @changeMusic(1, conf)
 
-  volumeUpDown: (action = "") ->
-    @resouses.isMute = false
-    volume = @getConfig "musicVolume"
-    if action is "up"
-      volume += @getConfigActions "volumeChangeRate"
-    else if action is "down"
-      if (volume - @getConfigActions("volumeChangeRate") < 0)
-        volume = 0
-      else
-        volume -= @getConfigActions "volumeChangeRate"
-    @setConfig("musicVolume", volume)
 
-  mute: (timer = 0) ->
-    @resouses.isMute = !@resouses.isMute
-    @resouses.music.volume = if @resouses.isMute then 0 else (@getConfig("musicVolume") * 0.01)
-    if timer != 0
-      time = timer * 1000
-      @debouncedMute?.cancel()
-      @debouncedMute = debounce @mute.bind(this), @time
-      @debouncedMute()
+  changeMusic: (nextIndex, conf) ->
+    isPlaying = @music['isPlaying']
+    maxIndex = @musicFiles.length - 1
+    @currentMusic = @currentMusic + nextIndex
+    @currentMusic = 0 if @currentMusic > maxIndex
+    @currentMusic = maxIndex if @currentMusic < 0
 
-  action: (name = "duringStreak", streak = 0) ->
+    @setMusic(conf)
+    @autoPlay() if isPlaying and conf['autoplay']
+
+
+  volumeUpDown: (volumeChange) ->
+    volume = (@music['volume'] * 100)
+    @music['isMute'] = false
+    haschanged = false
+    volume += volumeChange
+    volume = 0 if volume < 0
+    volume = 100 if volume > 100
+    return if volume is (@music['volume'] * 100)
+    @setConfig("volume", volume)
+
+  mute: ->
+    @music['isMute'] = !@music['isMute']
+    @music['file'].volume = if @music['isMute'] then 0 else @music['volume']
+
+  action: (name, conf) ->
     if name is "onNextLevel"
-      return @performAction @resouses.musicCong.actionNextLevel
+      return @performAction conf['onNextLevel'], conf
 
     if name is "duringStreak"
-      if streak > 0 and @typeLapse is "streak"
-        return @performAction @resouses.musicCong.actionDuringStreak
-      else if streak is 0 and @typeLapse is "time"
-        @performAction @resouses.musicCong.actionDuringStreak
-        return @debouncedActionDuringStreak()
+      if conf['typeLapse'] is "streak"
+        return @performAction conf['duringStreak'], conf
+      else
+        @performAction conf['duringStreak'], conf
+        return @debouncedActionDuringStreak('duringStreak', conf)
 
     if name is "endStreak"
-      @pause() if @getConfigActions "endStreak.pause"
-      return @performAction @resouses.musicCong.actionEndStreak
+      @pause() if conf['pause']
+      return @performAction conf['endStreak'], conf
 
     if name is "endMusic"
-      return @performAction @resouses.musicCong.endMusic
+      if conf['endMusic'] != "none"
+        @music['file'].onended = =>
+          @performAction conf['endMusic'], conf
+      else
+        @music['file'].onended = null
 
-  performAction: (action) ->
+  performAction: (action, conf) ->
     return @play()     if action is "play"
     return @pause()    if action is "pause"
     return @stop()     if action is "stop"
-    return @repeat()   if action is "repeat"
-    return @previous() if action is "previous"
-    return @next()     if action is "next"
-
-  getConfig: (config) ->
-    atom.config.get "activate-background-music.playBackgroundMusic.#{config}"
+    return @repeat(conf)   if action is "repeat"
+    return @previous(conf) if action is "previous"
+    return @next(conf)     if action is "next"
 
   setConfig: (config, value) ->
     atom.config.set("activate-background-music.playBackgroundMusic.#{config}", value)
-
-  getConfigActions: (config) ->
-    atom.config.get "activate-background-music.actions.#{config}"
