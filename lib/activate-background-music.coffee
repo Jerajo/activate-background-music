@@ -15,22 +15,6 @@ module.exports = activateBackgroundMusic =
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add "atom-workspace",
       "activate-background-music:toggle": => @toggle()
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:play/pause": => @backgroundMusic.playPause()
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:stop": => @backgroundMusic.stop()
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:repeat": => @backgroundMusic.repeat()
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:next": => @backgroundMusic.next()
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:previous": => @backgroundMusic.previous()
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:volumeUp": => @backgroundMusic.volumeUpDown("up")
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:volumeDown": => @backgroundMusic.volumeUpDown("down")
-    @subscriptions.add atom.commands.add "atom-workspace",
-      "activate-background-music:mute-toggle": => @backgroundMusic.muteToggle()
 
     require('atom-package-deps').install('activate-background-music');
 
@@ -55,4 +39,4 @@ module.exports = activateBackgroundMusic =
 
   setConfig: (value) ->
     atom.config.set "activate-power-mode.plugins.backgroundMusic", value
-    value
+    return value
