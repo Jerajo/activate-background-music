@@ -1,3 +1,4 @@
+{CompositeDisposable} = require "atom"
 playIntroAudio = require "./play-intro"
 musicPlayer = require "./music-player"
 configObserver = require "./config-observer"
@@ -19,12 +20,14 @@ module.exports =
     @playIntroAudio.play()
     @observer.setup()
     @musicPlayer.setup(@observer.conf)
+    @addCommands()
 
   disable: ->
     @musicPlayer.disable()
     @observer.destroy()
     @api = null
     @combo = null
+    @subscriptions?.dispose()
 
   onInput: (cursor, screenPosition, input, data) ->
     currentStreak = @combo.getCurrentStreak()
@@ -79,3 +82,22 @@ module.exports =
 
   muteToggle: ->
     @musicPlayer.mute()
+
+  addCommands: ->
+    @subscriptions = new CompositeDisposable
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:play/pause": => @playPause()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:stop": => @stop()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:repeat": => @repeat()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:next": => @next()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:previous": => @previous()
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:volumeUp": => @volumeUpDown("up")
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:volumeDown": => @volumeUpDown("down")
+    @subscriptions.add atom.commands.add "atom-workspace",
+      "activate-background-music:mute-toggle": => @muteToggle()

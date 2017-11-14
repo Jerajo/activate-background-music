@@ -1,3 +1,11 @@
+## 1.3.1 - Patch 04
+* Toggle errors fixed
+* Error index 0 of undefined in `config-observer.coffee` fixed
+* Error can't set value[] of null in `music-player.coffee` fixed
+* Commands subscriptions dispose on toggle added
+* Commands errors fixed
+
+
 ## 1.3.0 - Release 1.3.0
 * Memory consumed reduced
 * Performance update
