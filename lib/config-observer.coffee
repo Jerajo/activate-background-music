@@ -1,3 +1,5 @@
+{CompositeDisposable} = require "atom"
+
 module.exports =
   conf: []
 
@@ -27,4 +29,4 @@ module.exports =
 
   destroy: ->
     @subscriptions?.dispose()
-    @conf = null
+    @conf = []
