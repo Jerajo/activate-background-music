@@ -1,4 +1,4 @@
-## 1.3.1 - Patch 01
+## 1.3.1 - Patch 04
 * Toggle errors fixed
 * Error index 0 of undefined in `config-observer.coffee` fixed
 * Error can't set value[] of null in `music-player.coffee` fixed
